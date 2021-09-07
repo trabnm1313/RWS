@@ -11,28 +11,37 @@ export default function (entities, args){
     // If events > 0 (one or more event occurs)
     if(events.length){
         //For each events occurs
-        events.forEach((event) => {
+        events.forEach((response) => {
             //Event handler
-            console.log(entitiesList.map(entity => {return entity.status}))
+            console.log(entitiesList.map(entity => {return entity.status})) //Log all entities status
 
             //If hero? got clicked
-            if((event.name+"").includes("HERO_CLICKED")){
+            if(response.name == "HERO_CLICKED"){
 
                 //Which one is actually got clicked?
-                entities = { ...entitiesList.map(entity => {
-                    if(entity.status.id == (event.name+"").split(":")[1]){
+                entitiesList = entitiesList.map(entity => {
+                    if(entity.status.id == response.id){
                         entity.status.Health -= 1
+                        console.log(entity.status.id, "HP: " + entity.status.Health)
                     }
-                    return entity
-                })}
-
+                    if(entity.status.Health > 0){
+                        return entity
+                    }else console.log("DEAD")
+                })
 
             }   
 
         })
     }
 
+    //Remove undefines from mapping
+    entitiesList = entitiesList.filter(entity => {
+        if(entity != undefined) return true
+        else false
+    })
 
+    //Assign value to entities from array to object
+    entities = { ...entitiesList }
 
     return entities
 }

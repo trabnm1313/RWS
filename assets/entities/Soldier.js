@@ -18,8 +18,17 @@ const Knight = (props) => {
     const xBody = props.pos.x
     const yBody = props.pos.y
 
+    const response = {
+        name: "HERO_CLICKED",
+        id: props.status.id,
+        body: {
+            status: props.status,
+            voice: voiceLine[Math.floor(Math.random() * (voiceLine.length-1))] //Random 0 - maxVoiceLine-1 to display when event occurs
+        }
+    }
+
     return(
-        <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch({ name: "HERO_CLICKED:"+props.status.id, body: { status: props.status, voice: voiceLine[Math.floor(Math.random() * 6)]}} )  }>
+        <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)  }>
             <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Soldier.png")}></Image>
         </TouchableWithoutFeedback>
     )
