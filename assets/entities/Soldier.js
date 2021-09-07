@@ -1,7 +1,16 @@
 import React from 'react'
 import { Image, Touchable, TouchableWithoutFeedback } from 'react-native'
+import { v4 as uuidv4 } from 'uuid'
 
-const voiceLine = ["You clicked me", "Ouch!!", "Hey, Don't touch me", "What are you doing!", "...", "....", "....."]
+const voiceLine = [
+    "You clicked me",
+    "Ouch!!",
+    "Hey, Don't touch me",
+    "What are you doing!",
+    "...",
+    "....",
+    "....."
+]
 
 const Knight = (props) => {
     const bodyWidth = props.size.width
@@ -16,15 +25,18 @@ const Knight = (props) => {
     )
 }
 
-export default (engine, pos, size) => {
-    let status = {
-        id: Math.floor(Math.random()*100),
-        Health: 100,
-        Attack: 100,
-        Defense: 50,
-        Speed: 50,
-        Stamina: 0
+export default (engine, pos, size, status) => {
+    if(status == null){
+        status = {
+            id: uuidv4(),
+            Health: 100,
+            Attack: 100,
+            Defense: 50,
+            Speed: 50,
+            Stamina: 0
+        }
     }
+
 
     return{
         engine,
