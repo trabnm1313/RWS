@@ -11,12 +11,16 @@ const Something = (props) => {
   return (<Text>{props.value}</Text>)
 }
 
+const test = ()=>{
+
+}
+
 export default function App() {
   const engine = useRef(null)
 
   return (
     <View style={styles.container}>
-      <Button>Click</Button>
+      <Button onPress={()=>console.log("hello")}>Click</Button>
     </View>
   );
 }
