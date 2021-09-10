@@ -1,35 +1,134 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from 'react';
-import { StyleSheet, Text, View , TouchableOpacity, Button } from 'react-native';
-import { GameEngine } from 'react-native-game-engine';
-import entities from './assets/entities';
-import GameLoop from './assets/systems/GameLoop'
-import eventHandler from './assets/systems/eventHandler'
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ *
+ * @format
+ * @flow strict-local
+ */
 
-const Something = (props) => {
-  console.log(props)
-  return (<Text>{props.value}</Text>)
-}
+import React from 'react';
+import type {Node} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-const test = ()=>{
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
 
-}
+import { openDatabase } from 'react-native-sqlite-storage';
 
-export default function App() {
-  const engine = useRef(null)
+//Open database
+const db = openDatabase({
+  name: "dictionary.db", //Database name
+  location: "Library", //Source Folder categories
+  createFromLocation: "~dictionary.db" //Actual database file name
+},
+() => { console.log("Open database success") },
+(err) => { console.log("Open database failed:", err )}
+)
 
+//Making transaction
+db.transaction(tx => {
+  tx.executeSql(
+    "SELECT * from entries",
+    [],
+    (tx, res) => { console.log(tx, res, "SHOW") },
+    (tx, err) => { console.log(tx, err, "ERROR") }
+  )
+})
+
+const Section = ({children, title}): Node => {
+  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <View style={styles.container}>
-      <Button onPress={()=>console.log("hello")}>Click</Button>
+    <View style={styles.sectionContainer}>
+      <Text
+        style={[
+          styles.sectionTitle,
+          {
+            color: isDarkMode ? Colors.white : Colors.black,
+          },
+        ]}>
+        {title}
+      </Text>
+      <Text
+        style={[
+          styles.sectionDescription,
+          {
+            color: isDarkMode ? Colors.light : Colors.dark,
+          },
+        ]}>
+        {children}
+      </Text>
     </View>
   );
-}
+};
+
+const App: () => Node = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  return (
+    <SafeAreaView style={backgroundStyle}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={backgroundStyle}>
+        <Header />
+        <View
+          style={{
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+          }}>
+          <Section title="Step One">
+            Edit <Text style={styles.highlight}>App.js</Text> to change this
+            screen and then come back to see your edits.
+          </Section>
+          <Section title="See Your Changes">
+            <ReloadInstructions />
+          </Section>
+          <Section title="Debug">
+            <DebugInstructions />
+          </Section>
+          <Section title="Learn More">
+            Read the docs to discover what to do next:
+          </Section>
+          <LearnMoreLinks />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  highlight: {
+    fontWeight: '700',
   },
 });
+
+export default App;
