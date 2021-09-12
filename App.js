@@ -48,6 +48,11 @@ const initialDatabase = async () => {
   //If SQLite(default database directory) isn't exists then create one
   if ( !directoryInfo.exists ){
     await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + "SQLite").then(()=>console.log("Created SQLite directory.")).catch(err=>console.log(err))
+
+    //If there is no directory mean that there is no database either, so create one
+    const [{ uri }] = await Asset.loadAsync(require("./assets/dictionary.db")) //GET local database file URI
+    await FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionaries.db").then(() => console.log("Database loaded.")).catch(()=>console.log(err))
+
   }else{
     //Log current directory infomation
     console.log("SQLite Directory Exists: ", directoryInfo)
@@ -61,7 +66,7 @@ const initialDatabase = async () => {
       //Log current database in SQLite folder
       console.log(databaseInfo)
     }
-    
+
   }
 
 
