@@ -16,7 +16,7 @@ export default function (entities, args){
 
 
             //If hero? got clicked
-            if(response.name == "HERO_CLICKED"){
+            if((""+response.name).includes("CLICKED")){
 
                 //Which one is actually got clicked?
                 entitiesList = entitiesList.map(entity => {

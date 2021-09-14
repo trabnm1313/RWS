@@ -4,13 +4,7 @@ import { Image, NativeModules, Touchable, TouchableWithoutFeedback } from 'react
 let count = 0
 
 const voiceLine = [
-    "You clicked me",
-    "Ouch!!",
-    "Hey, Don't touch me",
-    "What are you doing!",
-    "...",
-    "....",
-    "....."
+    "..."
 ]
 
 const Knight = (props) => {
@@ -20,7 +14,7 @@ const Knight = (props) => {
     const yBody = props.pos.y
 
     const response = {
-        name: "SOLDIER_CLICKED",
+        name: "BAT_CLICKED",
         id: props.status.id,
         body: {
             status: props.status,
@@ -30,15 +24,15 @@ const Knight = (props) => {
 
     return(
         <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Character/Soldier_Melee.gif")}></Image>
+            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Monster/Bat.gif")}></Image>
         </TouchableWithoutFeedback>
     )
 }
 
-const Soldier = (engine, pos, size, status) => {
+const Bat = (engine, pos, size, status) => {
     if(status == null){
         status = {
-            id: "Soldier:"+count++,
+            id: "Bat:"+count++,
             Health: 100,
             Attack: 100,
             Defense: 50,
@@ -58,5 +52,5 @@ const Soldier = (engine, pos, size, status) => {
 }
 
 export {
-    Soldier
+    Bat
 }
