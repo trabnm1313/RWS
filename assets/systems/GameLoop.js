@@ -13,7 +13,7 @@ export default function (entities, args){
         //For each events occurs
         events.forEach((response) => {
             //Event handler
-            console.log(entitiesList.map(entity => {return entity.status})) //Log all entities status
+
 
             //If hero? got clicked
             if(response.name == "HERO_CLICKED"){

@@ -5,14 +5,13 @@ import { GameEngine } from 'react-native-game-engine'
 import Constants  from './Constants'
 
 //Entities
-import entities from './assets/entities'
+import generator from './assets/generator'
 
 //Systems
 import GameLoop from './assets/systems/GameLoop'
 import eventHandler from './assets/systems/eventHandler'
 
 //Debugging
-console.log(Constants)
 
 let gameStage = "onField"
 
@@ -24,7 +23,7 @@ export default function App() {
       <GameEngine
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
-      entities = {entities(engine, gameStage)}
+      entities={generator(engine, gameStage)}
       systems={[GameLoop]}
       onEvent={eventHandler}>
       </GameEngine>

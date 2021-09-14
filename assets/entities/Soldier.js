@@ -1,6 +1,7 @@
 import React from 'react'
-import { Image, Touchable, TouchableWithoutFeedback } from 'react-native'
-import { v4 as uuidv4 } from 'uuid'
+import { Image, NativeModules, Touchable, TouchableWithoutFeedback } from 'react-native'
+
+let count = 0
 
 const voiceLine = [
     "You clicked me",
@@ -34,10 +35,10 @@ const Knight = (props) => {
     )
 }
 
-export default (engine, pos, size, status) => {
+const Soldier = (engine, pos, size, status) => {
     if(status == null){
         status = {
-            id: uuidv4(),
+            id: count++,
             Health: 100,
             Attack: 100,
             Defense: 50,
@@ -54,4 +55,8 @@ export default (engine, pos, size, status) => {
         status,
         renderer: <Knight/>
     }
+}
+
+export {
+    Soldier
 }
