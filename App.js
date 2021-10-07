@@ -16,19 +16,21 @@ export default function App() {
     opendatabase();
   }) 
 
-  async function test(txt) {
-    onChangeText(txt)
-    console.log(await findWord(text))
+  async function handleChange(txt) {
+    setText(txt)
+    let isWord = await findWord(txt);
+    if (isWord == 0) {
+      console.log("No word in database")
+    } else console.log(txt + " is a word.")
   }
 
-  let [text, onChangeText] = useState("");
-  // Open database
+  let [text, setText] = useState("");
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        onChangeText={(i) => test(i)}
+        onChangeText={(i) => handleChange(i)}
         value={text}
       />
       <StatusBar style="auto" hidden />
