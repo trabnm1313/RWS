@@ -4,17 +4,23 @@ import { Image, NativeModules, Touchable, TouchableWithoutFeedback } from 'react
 let count = 0
 
 const voiceLine = [
-    "..."
+    "You clicked me",
+    "Ouch!!",
+    "Hey, Don't touch me",
+    "What are you doing!",
+    "...",
+    "....",
+    "....."
 ]
 
-const _Bat = (props) => {
+const _SlimeR = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height
     const xBody = props.pos.x
     const yBody = props.pos.y
 
     const response = {
-        name: "BAT_CLICKED",
+        name: "SLIMER_CLICKED",
         id: props.status.id,
         body: {
             status: props.status,
@@ -24,15 +30,15 @@ const _Bat = (props) => {
 
     return(
         <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Monster/Bat.gif")}></Image>
+            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Monster/slimeRed.gif")}></Image>
         </TouchableWithoutFeedback>
     )
 }
 
-const Bat = (engine, pos, size, status) => {
+const SlimeR = (engine, pos, size, status) => {
     if(status == null){
         status = {
-            id: "Bat:"+count++,
+            id: "SlimeR:"+count++,
             Health: 100,
             Attack: 100,
             Defense: 50,
@@ -47,10 +53,10 @@ const Bat = (engine, pos, size, status) => {
         pos,
         size,
         status,
-        renderer: <_Bat/>
+        renderer: <_SlimeR/>
     }
 }
 
 export {
-    Bat
+    SlimeR
 }

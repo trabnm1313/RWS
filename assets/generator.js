@@ -3,7 +3,19 @@ import Entity from "./entities"
 const CharacterList = []
 const MonsterList = [
     "Bat",
-    "Goblin"
+    "BigGoblin",
+    "Devil",
+    "Ghost",
+    "Goblin",
+    "SkeletonB",
+    "SkeletonS",
+    "SlimeB",
+    "SlimeG",
+    "SlimeR",
+    "SlimeP",
+    "Vampire",
+    "Witch",
+    "Zombie"
 ]
 
 let entities = {}
@@ -22,9 +34,9 @@ const enemyGenerator = (engine) => {
     //Example of How to randomly create 3 enemy
     for(let i=0; i<3; i++){
         let newEntity = {}
-        let MonsterType = MonsterList[Math.round(Math.random() * (MonsterList.length-1))]
+        let MonsterType = MonsterList[Math.round(Math.random() * (MonsterList.length-1))] //Random name from the [MonsterList] above.
 
-        entities[MonsterType+i] = Entity[MonsterType](engine, {x: (i*100)+50, y: 200}, {width: 100, height: 100})
+        entities[MonsterType+i] = Entity[MonsterType](engine, {x: (i*100)+50, y: 200}, {width: 100, height: 100}) //Create entity from the <MosterType> above.
     }
 
 }

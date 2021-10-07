@@ -13,7 +13,7 @@ const voiceLine = [
     "....."
 ]
 
-const Knight = (props) => {
+const _Soldier = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height
     const xBody = props.pos.x
@@ -53,7 +53,7 @@ const Soldier = (engine, pos, size, status) => {
         pos,
         size,
         status,
-        renderer: <Knight/>
+        renderer: <_Soldier/>
     }
 }
 
