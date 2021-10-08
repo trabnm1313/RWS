@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar'
-import React, { useRef } from 'react'
-import { StyleSheet, Text, View , TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { StyleSheet, Text, View , TouchableOpacity, LogBox, Platform, Dimensions } from 'react-native'
 import { GameEngine } from 'react-native-game-engine'
+import * as ScreenOrientation from "expo-screen-orientation"
 import Constants  from './Constants'
 
 //Entities
@@ -12,11 +13,23 @@ import GameLoop from './assets/systems/GameLoop'
 import eventHandler from './assets/systems/eventHandler'
 
 //Debugging
+LogBox.ignoreLogs(['Remote debugger']);
 
 let gameStage = "onField"
 
 export default function App() {
   const engine = useRef(null)
+
+  useEffect(() => {
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+  }, [])
+  
+  //Swap Width/Height in-case device is still in landscape mode
+  if(Constants.MAX_WIDTH < Constants.MAX_HEIGHT){
+    let tempHeight = Constants.MAX_HEIGHT
+    Constants.MAX_HEIGHT = Constants.MAX_WIDTH
+    Constants.MAX_WIDTH = tempHeight
+  }
 
   return (
     <View style={styles.container}>
@@ -29,7 +42,7 @@ export default function App() {
       </GameEngine>
       <StatusBar style="auto" hidden/>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

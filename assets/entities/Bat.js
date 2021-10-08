@@ -1,5 +1,6 @@
 import React from 'react'
-import { Image, NativeModules, Touchable, TouchableWithoutFeedback } from 'react-native'
+import { Image, NativeModules, Touchable, TouchableWithoutFeedback, View } from 'react-native'
+import LottieView from 'lottie-react-native'
 
 let count = 0
 
@@ -12,6 +13,7 @@ const _Bat = (props) => {
     const bodyHeight = props.size.height
     const xBody = props.pos.x
     const yBody = props.pos.y
+    const animation = React.useRef(null)
 
     const response = {
         name: "BAT_CLICKED",
@@ -22,10 +24,24 @@ const _Bat = (props) => {
         }
     }
 
+    //Loop Animation
+    React.useEffect(() => {
+        animation.current.play()
+    }, [])
+
+
+    //Selected Color
+    let selectedColor
+    if(props.status.selected){
+        selectedColor = "yellow"
+    }else selectedColor = "black"
+
     return(
-        <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Monster/Bat.gif")}></Image>
-        </TouchableWithoutFeedback>
+        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
+            <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
+                <LottieView ref={animation} source={require("../images/Monster/Bat.json")}></LottieView>
+            </TouchableWithoutFeedback>
+        </View>
     )
 }
 
@@ -37,7 +53,8 @@ const Bat = (engine, pos, size, status) => {
             Attack: 100,
             Defense: 50,
             Speed: 50,
-            Stamina: 0
+            Stamina: 0,
+            selected: false
         }
     }
 

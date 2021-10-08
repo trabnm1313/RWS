@@ -1,5 +1,6 @@
 import React from 'react'
-import { Image, NativeModules, Touchable, TouchableWithoutFeedback } from 'react-native'
+import { Image, NativeModules, Touchable, TouchableWithoutFeedback, Text, View } from 'react-native'
+import LottieView from 'lottie-react-native'
 
 let count = 0
 
@@ -18,6 +19,7 @@ const _Soldier = (props) => {
     const bodyHeight = props.size.height
     const xBody = props.pos.x
     const yBody = props.pos.y
+    const animation = React.useRef(null)
 
     const response = {
         name: "SOLDIER_CLICKED",
@@ -28,10 +30,24 @@ const _Soldier = (props) => {
         }
     }
 
+    //Loop Animation
+    React.useEffect(() => {
+        animation.current.play()
+    }, [])
+
+
+    //Selected Color
+    let selectedColor
+    if(props.status.selected){
+        selectedColor = "yellow"
+    }else selectedColor = "black"
+
     return(
-        <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-            <Image style={{ position: "absolute", width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}} source={require("../images/Character/Soldier_Melee.gif")}></Image>
-        </TouchableWithoutFeedback>
+        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
+            <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
+                <LottieView ref={animation} source={require("../images/Character/Soldier.json")}></LottieView>
+            </TouchableWithoutFeedback>
+        </View>
     )
 }
 
@@ -43,17 +59,17 @@ const Soldier = (engine, pos, size, status) => {
             Attack: 100,
             Defense: 50,
             Speed: 50,
-            Stamina: 0
+            Stamina: 0,
+            selected: false
         }
     }
-
 
     return{
         engine,
         pos,
         size,
         status,
-        renderer: <_Soldier/>
+        renderer: <_Soldier selected={status.selected}/>
     }
 }
 

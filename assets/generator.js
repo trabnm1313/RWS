@@ -1,5 +1,6 @@
 import Entity from "./entities"
 import Constants from "../Constants"
+import _ from 'lodash'
 
 const CharacterList = []
 const MonsterList = [
@@ -27,7 +28,7 @@ const enemyGenerator = (engine) => {
     const SIZE_BUTTON = Constants.MAX_WIDTH*0.067
     //Enemies Generator algorithim HERE
     
-    //Example of How to create 3 enemy in-line
+    //Left-side
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
         for(let j=0; j<2; j++) {
@@ -36,6 +37,7 @@ const enemyGenerator = (engine) => {
         } 
     }
 
+    // Right-side
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
         for(let j=0; j<2; j++) {
@@ -44,6 +46,7 @@ const enemyGenerator = (engine) => {
         }
     }
 
+    // Items
     for(let i=0; i<2; i++){
         let newEntity = {} //Create empty object
         for(let j=0; j<2; j++) {
@@ -52,12 +55,14 @@ const enemyGenerator = (engine) => {
         }
     }
 
+    //Input
     for(let i=0; i<3; i++){
         let newEntity = {}
         let MonsterType = MonsterList[Math.round(Math.random() * (MonsterList.length-1))] //Random name from the [MonsterList] above.
 
-        entities[MonsterType+i] = Entity[MonsterType](engine, {x: (i*100)+50, y: 200}, {width: 100, height: 100}) //Create entity from the <MosterType> above.
+        entities[MonsterType+i] = Entity.Soldier(engine, {x: (i*100)+50, y: 200}, {width: 50, height: 50}) //Create entity from the <MosterType> above.
     }
+
     //Example of How to randomly create 3 enemy
     // for(let i=0; i<3; i++){
     //     let newEntity = {}
@@ -75,7 +80,9 @@ export default (engine, gameStage) => {
     // entities["Soldier"] = Soldier
 
     //Example #2 with generate function
-    enemyGenerator(engine)
+    if(_.isEmpty(entities)){
+        enemyGenerator(engine)
+    }
 
     return entities  // entities = { {Soldier0: <Objects>}, {Soldier1 : <Objects>}, ... }
 }
