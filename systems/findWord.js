@@ -1,6 +1,7 @@
 import * as SQLite from "expo-sqlite";
 
 //Sample of how to get data from transaction to use
+//return 0, 1 0 = no word found, 1 = word found
 
 export default async (text) => {
   // capitalize the first letter to match the word in database
