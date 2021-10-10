@@ -3,16 +3,18 @@ import * as SQLite from "expo-sqlite";
 //Sample of how to get data from transaction to use
 
 export default async () => {
+
+  // Random number in range (min, max) -> getRndInteger(0, 10) = random number between 0 -> 10
   function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
-  // make character for like statement
+  // Make random number to Letter A-Z
   function makeChar() {
     return String.fromCharCode(getRndInteger(65, 90));
   }
 
-  // get word via first character
+  // Get word via first character
   async function getWordSpecifyChar(char) {
     const db = SQLite.openDatabase("dictionaries.db");
 
@@ -32,41 +34,26 @@ export default async () => {
     });
   }
 
-  async function getWordSpecifyLenght(char, length) {
-    const db = SQLite.openDatabase("dictionaries.db");
-
-    return new Promise((resolve) => {
-      //Making transaction
-      db.transaction((tx) => {
-        tx.executeSql(
-          "SELECT word FROM entries WHERE word like ? AND LENGTH(word) < ?",
-          [char, length],
-          (_, res) => {
-            //Send it to resolve
-            resolve(res);
-          },
-          (_, err) => console.log(err)
-        );
-      });
-    });
-  }
-
-  
   let Word = [];
   let result = [];
   let total = 0;
 
-  // get first word
+  // Get first word
   let gotWord = await getWordSpecifyChar(makeChar() + "%");
+
+  // Random extract Word from SQL Array
   let theWord = gotWord.rows._array[getRndInteger(0, gotWord.rows._array.length)].word;
+
+  // Total length tell that how many space left
   total += theWord.length;
+
+  // Push that word into array of word
   Word.push(theWord)
 
-  // get other word and push it in array
-  // looks like this => array = [ "word", "second", "third"]
+  // Get other word and push it in array until array have 15 letter
+  // The array gonna looks like this => array = [ "first_word (from lines 61 -> 71)", "second (in-process below)", "third (in-process below)"]
   while (total < 15) {
-    let leftLength = 7 - total;
-    gotWord = await getWordSpecifyLenght(makeChar() + "%", leftLength)
+    gotWord = await getWordSpecifyChar(makeChar() + "%")
 
     if (gotWord.rows._array.length === 0) {
      continue
@@ -77,6 +64,7 @@ export default async () => {
     }
   }
 
+  // split the word to letter array => ["L", "O", "V", "E"]
   Word.map((each) => {
     let spilter = each.split('');
     spilter.map((letter) => {
@@ -84,9 +72,10 @@ export default async () => {
     })
   })
 
+  // delete the overflow letter
   if (result.length > 15) {
     result.splice(15, result.length - 15)
   }
-
+  
   return result
 };
