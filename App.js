@@ -9,36 +9,39 @@ import {
 } from "react-native";
 import opendatabase from "./systems/opendatabase";
 import genWord from "./systems/genWord";
-// import findWord from "./systems/findWord";
+import findWord from "./systems/findWord";
 
 export default function App() {
+  // TextInput state
+  let [text, setText] = useState("");
 
+  // Mounting database
   useEffect(() => {
     opendatabase();
   }) 
 
-  async function gen() {
+  // Call genword
+  async function generate() {
     await genWord()
   }
 
-  // async function handleChange(txt) {
-  //   setText(txt)
-  //   let isWord = await findWord(txt);
-  //   if (isWord == 0) {
-  //     console.log("No word in database")
-  //   } else console.log(txt + " is a word.")
-  // }
-
-  // let [text, setText] = useState("");
+  // Handle change in Text input
+  async function handleChange(txt) {
+    setText(txt)
+    let isWord = await findWord(txt);
+    if (isWord == 0) {
+      console.log("No word in database")
+    } else console.log(txt + " is a word.")
+  }
 
   return (
     <View style={styles.container}>
-      {/* <TextInput
+      <TextInput
         style={styles.input}
         onChangeText={(i) => handleChange(i)}
         value={text}
-      /> */}
-      <Button title="Clicked" onPress={() => gen()}/>
+      />
+      <Button title="Clicked" onPress={() => generate()}/>
       <StatusBar style="auto" hidden />
     </View>
   );
