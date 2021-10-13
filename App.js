@@ -2,13 +2,13 @@ import { StatusBar } from "expo-status-bar";
 import React, { useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
-  TextInput,
+  Image,
   Text,
   View,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import * as ScreenOrientation from 'expo-screen-orientation';
+import WordTable from "./assets/entities/WordTable";
 // import opendatabase from "./systems/opendatabase";
 // import genWord from "./systems/genWord";
 // import findWord from "./systems/findWord";
@@ -16,12 +16,33 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 export default function App() {
   // TextInput state
   // let [text, setText] = useState("");
+  const wordArray = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "O",
+    "P",
+  ];
 
   // Mounting database
   useEffect(() => {
     // opendatabase();
     changeScreenOrientation()
   }) 
+  
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  }
 
   // Call genword
   // async function generate() {
@@ -37,13 +58,9 @@ export default function App() {
   //   } else console.log(txt + " is a word.")
   // }
 
-  async function changeScreenOrientation() {
-    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-  }
-
   return (
     <View style={styles.container}>
-      <Text>Hello</Text>
+      <WordTable wordArray={wordArray} />
       <StatusBar style="auto" hidden />
     </View>
   );
