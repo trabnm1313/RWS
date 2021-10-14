@@ -21,16 +21,16 @@ export default (props) => {
         case "N": return <Image style={styles.button} source={require("../Alphabet/N.png")} />
         case "O": return <Image style={styles.button} source={require("../Alphabet/O.png")} />
         case "P": return <Image style={styles.button} source={require("../Alphabet/P.png")} />
-        case "Q": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "R": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "S": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "T": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "U": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "V": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "W": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "X": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "Y": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
-        case "Z": return <Image style={styles.button} source={require("../Alphabet/A.png")} />
+        case "Q": return <Image style={styles.button} source={require("../Alphabet/Q.png")} />
+        case "R": return <Image style={styles.button} source={require("../Alphabet/R.png")} />
+        case "S": return <Image style={styles.button} source={require("../Alphabet/S.png")} />
+        case "T": return <Image style={styles.button} source={require("../Alphabet/T.png")} />
+        case "U": return <Image style={styles.button} source={require("../Alphabet/U.png")} />
+        case "V": return <Image style={styles.button} source={require("../Alphabet/V.png")} />
+        case "W": return <Image style={styles.button} source={require("../Alphabet/W.png")} />
+        case "X": return <Image style={styles.button} source={require("../Alphabet/X.png")} />
+        case "Y": return <Image style={styles.button} source={require("../Alphabet/Y.png")} />
+        case "Z": return <Image style={styles.button} source={require("../Alphabet/Z.png")} />
     }
 }
 
