@@ -6,17 +6,17 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import WordTable from "./assets/entities/WordTable";
-// import opendatabase from "./systems/opendatabase";
-// import genWord from "./systems/genWord";
+import opendatabase from "./systems/opendatabase";
+import genWord from "./systems/genWord";
+import WordInput from "./assets/entities/WordInput";
 // import findWord from "./systems/findWord";
 
 export default function App() {
-  // TextInput state
-  // let [text, setText] = useState("");
-  const wordArray = [
+  const [wordArray, setWordArray] = useState([
     "A",
     "B",
     "C",
@@ -32,11 +32,11 @@ export default function App() {
     "M",
     "O",
     "P",
-  ];
+  ]);
 
   // Mounting database
   useEffect(() => {
-    // opendatabase();
+    opendatabase()
     changeScreenOrientation()
   }) 
   
@@ -45,22 +45,15 @@ export default function App() {
   }
 
   // Call genword
-  // async function generate() {
-  //   await genWord()
-  // }
-
-  // Handle change in Text input
-  // async function handleChange(txt) {
-  //   setText(txt)
-  //   let isWord = await findWord(txt);
-  //   if (isWord == 0) {
-  //     console.log("No word in database")
-  //   } else console.log(txt + " is a word.")
-  // }
+  async function generate() {
+    setWordArray(await genWord())
+  }
 
   return (
     <View style={styles.container}>
+      <WordInput />
       <WordTable wordArray={wordArray} />
+      <Button title="Click" onPress={() => generate()}/>
       <StatusBar style="auto" hidden />
     </View>
   );

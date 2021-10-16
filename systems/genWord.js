@@ -76,8 +76,6 @@ export default async () => {
   if (result.length > 15) {
     result.splice(15, result.length - 15)
   }
-
-  console.log(result)
   
   return result
 };
