@@ -16,29 +16,14 @@ import WordInput from "./assets/entities/WordInput";
 // import findWord from "./systems/findWord";
 
 export default function App() {
-  const [wordArray, setWordArray] = useState([
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "O",
-    "P",
-  ]);
+  const [wordArray, setWordArray] = useState([]);
+  const [inputArray, setInputArray] = useState([])
 
   // Mounting database
   useEffect(() => {
     opendatabase()
     changeScreenOrientation()
-  }) 
+  })
   
   async function changeScreenOrientation() {
     await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -49,10 +34,16 @@ export default function App() {
     setWordArray(await genWord())
   }
 
+  function wordTableHandler(word) {
+    let x = [...inputArray];
+    x.push(word);
+    setInputArray(x)
+  }
+
   return (
     <View style={styles.container}>
-      <WordInput />
-      <WordTable wordArray={wordArray} />
+      <WordInput inputArray={inputArray} />
+      <WordTable handler={wordTableHandler} wordArray={wordArray} />
       <Button title="Click" onPress={() => generate()}/>
       <StatusBar style="auto" hidden />
     </View>

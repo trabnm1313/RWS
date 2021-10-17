@@ -3,16 +3,14 @@ import { View, StyleSheet, Button } from "react-native";
 import Word from "./Word";
 
 export default (props) => {
-  const [array, setArray] = useState([]);
+  const array = props.inputArray
 
-  let rendered = array.map((element) => {
-    return <Word word={element} />;
+  let rendered = array.map((element, index) => {
+    return <Word key={index} word={element} />;
   });
 
   function Add() {
-    let x = [...array];
-    x.push("A");
-    setArray(x);
+    
   }
 
   return (
