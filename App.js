@@ -13,7 +13,7 @@ import WordTable from "./assets/entities/WordTable";
 import opendatabase from "./systems/opendatabase";
 import genWord from "./systems/genWord";
 import WordInput from "./assets/entities/WordInput";
-// import findWord from "./systems/findWord";
+import findWord from "./systems/findWord";
 
 export default function App() {
   const [wordArray, setWordArray] = useState([]);
@@ -25,6 +25,7 @@ export default function App() {
     changeScreenOrientation()
   })
   
+  // screen orient
   async function changeScreenOrientation() {
     await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   }
@@ -34,16 +35,31 @@ export default function App() {
     setWordArray(await genWord())
   }
 
-  function wordTableHandler(word) {
+  function addWordInput(word) {
     let x = [...inputArray];
     x.push(word);
     setInputArray(x)
   }
 
+  function clearWordInput(wantToclear) {
+    if (wantToclear) {
+      setInputArray([])
+    }
+  }
+
+  async function handleChange(txt) {
+    let gonnaCheck = txt.join("")
+    let isWord = await findWord(gonnaCheck);
+    if (isWord == 0) {
+      console.log("No word in database")
+    } else console.log(gonnaCheck + " is a word.")
+  }
+
   return (
     <View style={styles.container}>
-      <WordInput inputArray={inputArray} />
-      <WordTable handler={wordTableHandler} wordArray={wordArray} />
+      <Button title="Check" onPress={() => {handleChange(inputArray)}} />
+      <WordInput inputArray={inputArray} wantToClear={clearWordInput} />
+      <WordTable handler={addWordInput} wordArray={wordArray} />
       <Button title="Click" onPress={() => generate()}/>
       <StatusBar style="auto" hidden />
     </View>

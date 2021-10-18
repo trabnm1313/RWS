@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Button } from "react-native";
+import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
 import Word from "./Word";
 
 export default (props) => {
-  const array = props.inputArray
+  let array = props.inputArray
 
   let rendered = array.map((element, index) => {
-    return <Word key={index} word={element} />;
+    return (
+      <TouchableOpacity key={index} onPress={() => {callForClear()}}>
+        <Word word={element} />
+      </TouchableOpacity>
+    )
   });
 
-  function Add() {
-    
+  function callForClear() {
+    props.wantToClear(true)
   }
 
   return (
     <>
-      <Button title="Add" onPress={() => Add()} />
       <View style={{ padding: 20, flexDirection: 'row' }}>{rendered}</View>
     </>
   );
