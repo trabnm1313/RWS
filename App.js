@@ -35,20 +35,27 @@ export default function App() {
     setWordArray(await genWord())
   }
 
+  // add word from word table to word input
   function addWordInput(word) {
     let x = [...inputArray];
     x.push(word);
     setInputArray(x)
   }
 
+  // clear wordInput array
   function clearWordInput(wantToclear) {
     if (wantToclear) {
       setInputArray([])
     }
   }
 
+    // handle Checking word in database
+    // gonna upgrade to onchange but now its on click
   async function handleChange(txt) {
+    // txt is array of word => ["R", "W", "S"] gonna make it to normal string with join() function
     let gonnaCheck = txt.join("")
+
+    // let check the word now
     let isWord = await findWord(gonnaCheck);
     if (isWord == 0) {
       console.log("No word in database")

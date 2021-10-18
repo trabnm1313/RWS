@@ -3,6 +3,7 @@ import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
 import Word from "./Word";
 
 export default (props) => {
+  // receive inputArray
   let array = props.inputArray
 
   let rendered = array.map((element, index) => {
@@ -13,6 +14,8 @@ export default (props) => {
     )
   });
 
+
+  // call to parent to reset inputArray
   function callForClear() {
     props.wantToClear(true)
   }
@@ -23,9 +26,3 @@ export default (props) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  wordinput: {
-    padding: 20,
-  },
-});
