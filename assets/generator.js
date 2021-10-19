@@ -1,6 +1,7 @@
 import Entity from "./entities"
 import Constants from "../Constants"
 import _ from 'lodash'
+import {currentWord} from './systems/GameLoop'
 
 const CharacterList = []
 const MonsterList = [
@@ -18,6 +19,34 @@ const MonsterList = [
     "Vampire",
     "Witch",
     "Zombie"
+]
+const Alphabet = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
 ]
 
 let entities = {}
@@ -58,16 +87,9 @@ const enemyGenerator = (engine) => {
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
         for(let j=0; j<6; j++) {
-            newEntity = Entity.Soldier(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}) //Assign key and entity to object
+            let randomPos = Math.round(Math.random() * (Alphabet.length-1))
+            newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, Alphabet[randomPos]),  //Assign key and entity to object
             entities["Button:"+i+''+j] = newEntity
-        }
-    }
-
-    for(let i=0; i<1; i++){
-        let newEntity = {} //Create empty object
-        for(let j=0; j<7; j++) {
-            newEntity = Entity.Soldier(engine, {x: Constants.MAX_WIDTH*0.265+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.25+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}) //Assign key and entity to object
-            entities["Word:"+i+''+j] = newEntity
         }
     }
 
@@ -89,16 +111,17 @@ const enemyGenerator = (engine) => {
 
 }
 
-export default (engine, gameStage) => {
+module.exports = {
+    generator: (engine, gameStage) => {
+        //Example #1 with common generate
+        // let Soldier = Entity.Soldier(engine, {x: 50, y: 50}, {width: 100, height: 100})
+        // entities["Soldier"] = Soldier
 
-    //Example #1 with common generate
-    // let Soldier = Entity.Soldier(engine, {x: 50, y: 50}, {width: 100, height: 100})
-    // entities["Soldier"] = Soldier
+        //Example #2 with generate function
+        if(_.isEmpty(entities)){
+            enemyGenerator(engine)
+        }
 
-    //Example #2 with generate function
-    if(_.isEmpty(entities)){
-        enemyGenerator(engine)
-    }
-
-    return entities  // entities = { {Soldier0: <Objects>}, {Soldier1 : <Objects>}, ... }
+        return entities  // entities = { {Soldier0: <Objects>}, {Soldier1 : <Objects>}, ... }
+    },
 }

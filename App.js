@@ -6,7 +6,7 @@ import * as ScreenOrientation from "expo-screen-orientation"
 import Constants  from './Constants'
 
 //Entities
-import generator from './assets/generator'
+import {generator} from './assets/generator'
 
 //Systems
 import GameLoop from './assets/systems/GameLoop'

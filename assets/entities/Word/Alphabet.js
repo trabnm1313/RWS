@@ -1,10 +1,10 @@
 import React from 'react'
 import { Image, NativeModules, Touchable, TouchableWithoutFeedback, Text, View } from 'react-native'
-import LottieView from 'lottie-react-native'
+import Word from "./Word"
 
 let count = 0
 
-const _Alphabet_A = (props) => {
+const _Alphabet = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height
     const xBody = props.pos.x
@@ -24,20 +24,22 @@ const _Alphabet_A = (props) => {
         selectedColor = "yellow"
     }else selectedColor = "black"
 
+    const imageLoader = Word(props.status.letter)
+
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-                <Image style={{width:"100%", height:"100%"}} source={require("../images/Alphabet/A.png")}></Image>
+                {imageLoader}
             </TouchableWithoutFeedback>
         </View>
     )
 }
 
-const Alphabet_A = (engine, pos, size, status) => {
+const Alphabet = (engine, pos, size, status, letter) => {
     if(status == null){
         status = {
-            id: "A:"+count++,
-            letter: "A",
+            id: letter+":"+count++,
+            letter: letter,
             selected: false,
             type: "Alphabet"
         }
@@ -48,10 +50,10 @@ const Alphabet_A = (engine, pos, size, status) => {
         pos,
         size,
         status,
-        renderer: <_Alphabet_A selected={status.selected}/>
+        renderer: <_Alphabet/>
     }
 }
 
 export {
-    Alphabet_A
+    Alphabet
 }

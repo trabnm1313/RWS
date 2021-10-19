@@ -18,7 +18,7 @@ import { Witch } from './Witch'
 import { Zombie } from './Zombie'
 
 //Alphabet
-import { Alphabet_A } from "./Alphabet_A"
+import { Alphabet } from "./Word/Alphabet"
 
 //Items
 import { HP_Potion } from './HP_Potion'
@@ -39,6 +39,6 @@ export default {
     Vampire: Vampire,
     Witch: Witch,
     Zombie: Zombie,
-    Alphabet_A: Alphabet_A,
+    Alphabet: Alphabet,
     HP_Potion: HP_Potion
 }
