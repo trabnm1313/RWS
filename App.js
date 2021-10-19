@@ -2,46 +2,72 @@ import { StatusBar } from "expo-status-bar";
 import React, { useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
-  TextInput,
+  Image,
+  Text,
   View,
   TouchableOpacity,
   Button,
 } from "react-native";
+import * as ScreenOrientation from 'expo-screen-orientation';
+import WordTable from "./assets/entities/WordTable";
 import opendatabase from "./systems/opendatabase";
 import genWord from "./systems/genWord";
+import WordInput from "./assets/entities/WordInput";
 import findWord from "./systems/findWord";
 
 export default function App() {
-  // TextInput state
-  let [text, setText] = useState("");
+  const [wordArray, setWordArray] = useState([]);
+  const [inputArray, setInputArray] = useState([])
 
   // Mounting database
   useEffect(() => {
-    opendatabase();
-  }) 
+    opendatabase()
+    changeScreenOrientation()
+  })
+  
+  // screen orient
+  async function changeScreenOrientation() {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  }
 
   // Call genword
   async function generate() {
-    await genWord()
+    setWordArray(await genWord())
   }
 
-  // Handle change in Text input
+  // add word from word table to word input
+  function addWordInput(word) {
+    let x = [...inputArray];
+    x.push(word);
+    setInputArray(x)
+  }
+
+  // clear wordInput array
+  function clearWordInput(wantToclear) {
+    if (wantToclear) {
+      setInputArray([])
+    }
+  }
+
+    // handle Checking word in database
+    // gonna upgrade to onchange but now its on click
   async function handleChange(txt) {
-    setText(txt)
-    let isWord = await findWord(txt);
+    // txt is array of word => ["R", "W", "S"] gonna make it to normal string with join() function
+    let gonnaCheck = txt.join("")
+
+    // let check the word now
+    let isWord = await findWord(gonnaCheck);
     if (isWord == 0) {
       console.log("No word in database")
-    } else console.log(txt + " is a word.")
+    } else console.log(gonnaCheck + " is a word.")
   }
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        onChangeText={(i) => handleChange(i)}
-        value={text}
-      />
-      <Button title="Clicked" onPress={() => generate()}/>
+      <Button title="Check" onPress={() => {handleChange(inputArray)}} />
+      <WordInput inputArray={inputArray} wantToClear={clearWordInput} />
+      <WordTable handler={addWordInput} wordArray={wordArray} />
+      <Button title="Click" onPress={() => generate()}/>
       <StatusBar style="auto" hidden />
     </View>
   );

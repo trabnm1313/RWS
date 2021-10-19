@@ -7,7 +7,7 @@ export default async (text) => {
   // make text lowercase
   let txt = text.toLowerCase()
   // capitalize the first letter to match the word in database
-  let word = txt.charAt(0).toUpperCase() + text.slice(1)
+  let word = txt.charAt(0).toUpperCase() + txt.slice(1)
   
   //Making promise
   return new Promise((resolve, reject) => {
