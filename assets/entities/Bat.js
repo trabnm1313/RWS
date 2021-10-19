@@ -54,7 +54,8 @@ const Bat = (engine, pos, size, status) => {
             Defense: 50,
             Speed: 50,
             Stamina: 0,
-            selected: false
+            selected: false,
+            type: "Monster"
         }
     }
 

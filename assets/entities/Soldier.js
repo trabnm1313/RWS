@@ -45,7 +45,7 @@ const _Soldier = (props) => {
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-                <LottieView ref={animation} source={require("../images/Character/Soldier.json")}></LottieView>
+                <LottieView ref={animation} source={require("../images/Character/SoldierMelee.json")}></LottieView>
             </TouchableWithoutFeedback>
         </View>
     )
@@ -60,7 +60,8 @@ const Soldier = (engine, pos, size, status) => {
             Defense: 50,
             Speed: 50,
             Stamina: 0,
-            selected: false
+            selected: false,
+            type: "Human"
         }
     }
 

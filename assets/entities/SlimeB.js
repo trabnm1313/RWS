@@ -43,7 +43,9 @@ const SlimeB = (engine, pos, size, status) => {
             Attack: 100,
             Defense: 50,
             Speed: 50,
-            Stamina: 0
+            Stamina: 0,
+            selected: false,
+            type: "Monster"
         }
     }
 

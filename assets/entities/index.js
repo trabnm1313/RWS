@@ -1,3 +1,4 @@
+//Human
 import { Soldier } from './Soldier'
 
 //Moster
@@ -16,6 +17,11 @@ import { Vampire } from './Vampire'
 import { Witch } from './Witch'
 import { Zombie } from './Zombie'
 
+//Alphabet
+import { Alphabet_A } from "./Alphabet_A"
+
+//Items
+import { HP_Potion } from './HP_Potion'
 
 export default {
     Soldier: Soldier,
@@ -32,5 +38,7 @@ export default {
     SlimeP: SlimeP,
     Vampire: Vampire,
     Witch: Witch,
-    Zombie: Zombie
+    Zombie: Zombie,
+    Alphabet_A: Alphabet_A,
+    HP_Potion: HP_Potion
 }
