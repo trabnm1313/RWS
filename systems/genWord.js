@@ -52,7 +52,7 @@ export default async () => {
 
   // Get other word and push it in array until array have 15 letter
   // The array gonna looks like this => array = [ "first_word (from lines 61 -> 71)", "second (in-process below)", "third (in-process below)"]
-  while (total < 15) {
+  while (total < 18) {
     gotWord = await getWordSpecifyChar(makeChar() + "%")
 
     if (gotWord.rows._array.length === 0) {
@@ -73,9 +73,12 @@ export default async () => {
   })
 
   // delete the overflow letter
-  if (result.length > 15) {
-    result.splice(15, result.length - 15)
+  if (result.length > 18) {
+    result.splice(18, result.length - 18)
   }
-  
-  return result
+
+  // shuffle element in array
+  final_result = result.sort(() => Math.random() - 0.5)
+
+  return final_result
 };
