@@ -19,15 +19,15 @@ const _Alphabet = (props) => {
     }
 
     //Selected Color
-    let selectedColor
+    let opacity
     if(props.status.selected){
-        selectedColor = "yellow"
-    }else selectedColor = "black"
+        opacity = 'rgba(0,0,0,1)'
+    }else opacity = 'rgba(255,255,255,1)'
 
     const imageLoader = Word(props.status.letter)
 
     return(
-        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
+        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, backgroundColor: opacity}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
                 {imageLoader}
             </TouchableWithoutFeedback>
@@ -43,6 +43,8 @@ const Alphabet = (engine, pos, size, status, letter) => {
             selected: false,
             type: "Alphabet"
         }
+    }else{
+        status.letter = letter
     }
 
     return{

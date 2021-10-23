@@ -23,6 +23,9 @@ import { Alphabet } from "./Word/Alphabet"
 //Items
 import { HP_Potion } from './HP_Potion'
 
+//Components
+import { Button } from "./Button"
+
 export default {
     Soldier: Soldier,
     Bat: Bat,
@@ -40,5 +43,6 @@ export default {
     Witch: Witch,
     Zombie: Zombie,
     Alphabet: Alphabet,
-    HP_Potion: HP_Potion
+    HP_Potion: HP_Potion,
+    Button: Button
 }
