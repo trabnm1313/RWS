@@ -67,7 +67,7 @@ const enemyGenerator = (engine, stage) => {
         for(let i=0; i<3; i++){
             let newEntity = {} //Create empty object
             for(let j=0; j<2; j++) {
-                newEntity = Entity.Goblin(engine, {x: Constants.MAX_WIDTH*0.01+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}) //Assign key and entity to object
+                newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, null, "Ghost") //Assign key and entity to object
                 entities["Monster:"+i+''+j] = newEntity
             } 
         }
@@ -76,7 +76,7 @@ const enemyGenerator = (engine, stage) => {
         for(let i=0; i<3; i++){
             let newEntity = {} //Create empty object
             for(let j=0; j<2; j++) {
-                newEntity = Entity.Soldier(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}) //Assign key and entity to object
+                newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, null, "Soldier") //Assign key and entity to object
                 entities["Human:"+i+''+j] = newEntity
             }
         }
@@ -89,17 +89,6 @@ const enemyGenerator = (engine, stage) => {
         //         entities["Item:"+i+''+j] = newEntity
         //     }
         // }
-
-        for(let i=0; i<3; i++){
-            let newEntity = {} //Create empty object
-            for(let j=0; j<6; j++) {
-                let randomPos = Math.round(Math.random() * (Alphabet.length-1))
-                newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, Alphabet[randomPos]),  //Assign key and entity to object
-                entities["Button:"+i+''+j] = newEntity
-            }
-        }
-
-        entities["Confirm"] = Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm")
 
     }
 

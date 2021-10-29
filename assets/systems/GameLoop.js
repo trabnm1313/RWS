@@ -6,12 +6,20 @@ import { Data, loadStatus } from '../systems/opendatabase'
 import { enemyGenerator } from '../generator'
 
 import _ from 'lodash'
+import entities from '../entities/index'
 
 let initialGenerate = true
 let engine = null
 
+//Selected Entity
 let humanSelected = "", monsterSelected = ""
-let currentWord = "", currentWordID = [], summitWord = "", didWordChange = false, deleteWord = false
+
+//State Variables
+let didWordChange = false, deleteWord = false
+let phase = "monster"
+
+//Common Variables
+let currentWord = "", currentWordID = [], submitWord = ""
 let words = []
 
 const SIZE = Constants.MAX_WIDTH*0.073891
@@ -20,6 +28,44 @@ const SIZE_BUTTON = Constants.MAX_WIDTH*0.067
 
 async function generateWord(){
     words = await genWord()
+}
+
+function wordEntityGenerator(entitiesList){
+    entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
+
+    for(let i=0; i<3; i++){
+        let newEntity = {} //Create empty object
+        for(let j=0; j<6; j++) {
+            newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j]),  //Assign key and entity to object
+            entitiesList.push(newEntity)
+        }
+    }
+}
+
+function clearWordEntity(entitiesList){
+    let newEntitiesList = entitiesList.filter(entity => {
+        if(entity.status.type == "Alphabet" || entity.status.button == "Confirm"){
+            return false
+        } else return true
+    })
+    return newEntitiesList
+}
+
+function clearDisplayWordEntity(entitiesList){
+    let newEntitiesList = entitiesList.filter(entity => { 
+        if(currentWordID.includes(entity.status.id)){
+            if(entity.status.type == "Alphabet_SHOW"){
+                return false
+            }
+            entity.status.selected = false
+            return true
+        }
+        return true
+    })
+
+    currentWord = ""
+    currentWordID = []
+    return newEntitiesList
 }
 
 export default function (entities, args){
@@ -42,95 +88,116 @@ export default function (entities, args){
             return enemyGenerator(engine, "Battle")
         }
 
-        if(events.length > 0 && events[0].body != undefined){
-            
-            //Select Monster || Human
-            if(events["0"].body.status.type == "Monster" && monsterSelected == ""){ //Select monster first
-                monsterSelected = events[0]
-                monsterSelected.body.status.selected = true
-            }else if(events["0"].id == monsterSelected.id){ //Select same monster, remove the selected on both side
-                monsterSelected.body.status.selected = false
-                monsterSelected = ""
-                humanSelected = ""
-            }else if(events["0"].body.status.type == "Monster" && monsterSelected != ""){ //Selecte different monster while there is selected
-                monsterSelected.body.status.selected = false
-                if(humanSelected != ""){
-                    humanSelected.body.status.selected = false
+        if(events.length > 0 && events[0].status != undefined){
+            console.log(words)
+
+            //Selecting Phase
+            if(phase == "monster"){
+
+                //Selecting condition
+                if(events["0"].status.type == "Monster" && monsterSelected == ""){ //Select monster first
+                    monsterSelected = events[0]
+                    monsterSelected.status.selected = true
+                }else if(events["0"].id == monsterSelected.id){ //Select same monster, remove the selected on both side
+                    monsterSelected.status.selected = false
+                    monsterSelected = ""
                     humanSelected = ""
+                }else if(events["0"].status.type == "Monster" && monsterSelected != ""){ //Selecte different monster while there is selected
+                    monsterSelected.status.selected = false
+                    if(humanSelected != ""){
+                        humanSelected.status.selected = false
+                        humanSelected = ""
+                    }
+                    monsterSelected = events[0]
+                    monsterSelected.status.selected = true
+                }else if(events["0"].status.type == "Human" && monsterSelected != ""){ //Select human after monster
+                    humanSelected = events[0]
+                    console.log(monsterSelected.status.id + " Attack " + humanSelected.status.id) //DEBUG
+                    humanSelected.status.Health -= 1
+                    console.log(humanSelected.id + " have " + humanSelected.status.Health + " HP left.") //DEBUG
+
+                    //Clear out selected and move on to next phase when all monsters done attacking
+                    //TODO
+                    monsterSelected.status.selected = false
+                    monsterSelected = ""
+                    humanSelected = ""
+                    phase = "human"
+
+
+                    console.log("Phase: " + phase + ", Random attack from humanity has been initialized!") //DEBUG
                 }
 
-                monsterSelected = events[0]
-                monsterSelected.body.status.selected = true
-            }else if(events["0"].body.status.type == "Human" && monsterSelected != ""){ //Select human after monster
-                humanSelected = events[0]
-                console.log(monsterSelected.body.status.id + " Attack " + humanSelected.body.status.id)
-                humanSelected.body.status.Health -= 1
-                console.log(humanSelected.id + " have " + humanSelected.body.status.Health + " HP left.")
-            }
+            //Alphabet phase
+            }else if(phase == "alphabet"){
 
-            //Select alphabet
-            if(events[0].name == "ALPHABET_CLICKED" && currentWord.length < 7 && !currentWordID.includes(events[0].id)){
-                currentWord += events["0"].body.status.letter
-                currentWordID.push(events[0].id)
-                events[0].body.status.selected = true
-                //Todo
+                //Select alphabet
+                //If click at input alphabet and the display alphabet
+                if(events[0].name == "ALPHABET_CLICKED" && currentWord.length < 7 && !currentWordID.includes(events[0].id)){
+                    currentWord += events["0"].status.letter
+                    currentWordID.push(events[0].id)
+                    events[0].status.selected = true
+                    //Todo
 
-                didWordChange = true
-            }else if(events[0].body.status.type == "Alphabet_SHOW"){
-                deleteWord = true
+                    didWordChange = true
+                }else if(events[0].status.type == "Alphabet_SHOW"){
+                    entitiesList = clearDisplayWordEntity(entitiesList) //Clear current displayed word
+                }
+
+                //Buttons
+                if(events[0].status.type == 'Button'){
+                    //IF Confirm button clicked
+                    if(events[0].status.button == "Confirm"){
+                        //Remove All current Words
+                        entitiesList = entitiesList.filter(entity => {
+                            return entity.status.type != "Alphabet"
+                        })
+                        submitWord = currentWord
+                        
+                        //Check and apply buffs to current team members
+                        //TODO
+
+                        //Clear current displayed word and input
+                        entitiesList = clearDisplayWordEntity(entitiesList)
+                        entitiesList = clearWordEntity(entitiesList)
+
+                        //Move on to the next phases <monster attack human>
+                        phase = "monster"
+
+                        //Pre-Generate new set of words
+                        generateWord()
+                        console.log(submitWord) //DEBUG: show submit word
+                    }
+                    
+
+                }
             }
             
-            //Buttons
-            if(events[0].body.status.type == 'Button'){
-                //IF Confirm button clicked
-                if(events[0].body.status.button == "Confirm"){
-                    //Remove All current Words
-                    entitiesList = entitiesList.filter(entity => {
-                        return entity.status.type != "Alphabet"
-                    })
-
-                    //Generate new Alphabet Entity using chars from `words`
-                    for(let i=0; i<3; i++){
-                        let newEntity = {} //Create empty object
-                        for(let j=0; j<6; j++) {
-                            newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j]),  //Assign key and entity to object
-                            entitiesList.push(newEntity)
-                        }
-                    }
-
-                    //Pre-Generate new set of words
-                    generateWord()
-                }
-                
-
-            }
         }
 
-        if(didWordChange){
-            for(let i=0; i<1; i++){
-                let newEntity = {} //Create empty object
-                for(let j=0; j<currentWord.length; j++) {
-                    newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.265+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.25+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, { id: currentWordID[j], letter: null, selected: false, type: "Alphabet_SHOW"}, currentWord[j]) //Assign key and entity to object
-                    entitiesList.push(newEntity)
+
+        //Humanity phases
+        if(phase == "human"){
+            //Random Attack algorithm below
+            //TODO
+
+
+            wordEntityGenerator(entitiesList)
+            phase = "alphabet"
+
+        }else if(didWordChange || deleteWord){
+
+            if(didWordChange){
+                for(let i=0; i<1; i++){
+                    let newEntity = {} //Create empty object
+                    for(let j=0; j<currentWord.length; j++) {
+                        newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.265+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.25+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, { id: currentWordID[j], letter: null, selected: false, type: "Alphabet_SHOW"}, currentWord[j]) //Assign key and entity to object
+                        entitiesList.push(newEntity)
+                    }
                 }
+    
+                didWordChange = false
             }
 
-            didWordChange = false
-        }else if(deleteWord){
-            entitiesList = entitiesList.filter(entity => { 
-                if(currentWordID.includes(entity.status.id)){
-                    if(entity.status.type == "Alphabet_SHOW"){
-                        return false
-                    }
-                    entity.status.selected = false
-                    return true
-                }
-                return true
-            })
-
-            currentWord = ""
-            currentWordID = []
-            deleteWord = false
         }
         
     }

@@ -13,9 +13,7 @@ const _Alphabet = (props) => {
     const response = {
         name: "ALPHABET_CLICKED",
         id: props.status.id,
-        body: {
-            status: props.status
-        }
+        status: props.status
     }
 
     //Selected Color
