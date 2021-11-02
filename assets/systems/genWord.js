@@ -16,7 +16,7 @@ export default async () => {
 
   // Get word via first character
   async function getWordSpecifyChar(char) {
-    const db = SQLite.openDatabase("dictionaries.db");
+    const db = SQLite.openDatabase("dictionary.db");
 
     return new Promise((resolve) => {
       //Making transaction

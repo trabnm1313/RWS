@@ -13,7 +13,7 @@ const _Monster = (props) => {
     const animation = React.useRef(null)
 
     const response = {
-        name: "SOLDIER_CLICKED",
+        name: "MONSTER_CLICKED",
         id: props.status.id,
         status: props.status,
     }
@@ -22,7 +22,13 @@ const _Monster = (props) => {
     let selectedColor
     if(props.status.selected){
         selectedColor = "yellow"
-    }else selectedColor = "black"
+    }else{
+        if(props.status.rested == true){
+            selectedColor = "green"
+        }else{
+            selectedColor = "black"
+        }
+    }
 
     const monsterLoader = Monsters(entityName, animation)
 
@@ -50,6 +56,7 @@ const Monster = (engine, pos, size, status, entity) => {
             Speed: 50,
             Stamina: 0,
             selected: false,
+            rested: false,
             type: "Monster"
         }
     }

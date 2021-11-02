@@ -7,6 +7,6 @@ let entities = {}
 export default function(engine) {
     return {
         Engine: { engine: engine },
-        Wait: { renderer: <Text style={{top: 30, left: 30}}> Wait </Text>}
+        Wait: { renderer: <Text style={{top: 30, left: 30}}> Wait </Text> }
     }
 }

@@ -12,21 +12,24 @@ import {generator} from './assets/generator'
 
 //Systems
 import GameLoop from './assets/systems/GameLoop'
+import Menu from './assets/systems/Menu'
 import eventHandler from './assets/systems/eventHandler'
 import { openDatabase, loadStatus } from './assets/systems/opendatabase'
 import Loading from './assets/systems/Loading'
 
+//State
+let stage = "Battle"
+
 //Debugging
 LogBox.ignoreLogs(['Remote debugger']);
 
-let gameStage = "onField"
-
 export default function App() {
+  const [stage, setStage] = React.useState("Battle")
   const engine = useRef(null)
-
+  openDatabase()
+  
   // Mounting database
   useEffect(() => {
-    openDatabase()
     changeScreenOrientation()
   })
   
@@ -37,12 +40,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Image style={{left:0, top:0, width: 800, height: 375, position: 'absolute'}} source={require("./assets/images/Battlefield.png")}/>
+      <Image style={{left:0, top:0, width: "100%", height: "100%", position: 'absolute'}} source={require("./assets/images/Battlefield2.png")}/>
       <GameEngine
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
       entities={loadingScreen(engine)}
-      systems={[GameLoop, Loading]}
+      systems={[Menu, GameLoop, Loading]}
       onEvent={eventHandler}>
       </GameEngine>
       <StatusBar style="auto" hidden/>

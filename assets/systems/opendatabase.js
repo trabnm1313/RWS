@@ -6,7 +6,7 @@ let Data = null
 let loadStatus = false
 
 async function getData(){
-  const db = SQLite.openDatabase("dictionaries.db");
+  const db = SQLite.openDatabase("dictionary.db");
 
   return new Promise((resolve) => {
     //Making transaction
@@ -16,7 +16,7 @@ async function getData(){
         [],
         (_, res) => {
           //Send it to resolve
-          resolve(res);
+          resolve(res)
         },
         (_, err) => console.log(err)
       )
@@ -28,7 +28,7 @@ async function getData(){
 async function openDatabase(){
   //Get information of directory & database from android app through FileSystem
   const directoryInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory+"SQLite")
-  const databaseInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory+"SQLite/dictionaries.db")
+  const databaseInfo = await FileSystem.getInfoAsync(FileSystem.documentDirectory+"SQLite/dictionary.db")
 
   //If SQLite(default database directory) isn't exists then create one
   if ( !directoryInfo.exists ){
@@ -36,27 +36,12 @@ async function openDatabase(){
 
     //If there is no directory mean that there is no database either, so create one
     const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
-    await FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionaries.db").then(() => {
+    await FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionary.db").then(() => {
       console.log("Database loaded.")
       parseData()
     }).catch(()=>console.log(err))
-
   }else{
-    //Log current directory infomation
-    // console.log("SQLite Directory Exists: ", directoryInfo)
-
-    //If database isn't exists then create one
-    if( !databaseInfo.exists ){
-      const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
-      //Download local database into SQLite directory in android app
-      await FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionaries.db").then(() => {
-        console.log("Database loaded.")
-        parseData()
-      }).catch(()=>console.log(err))
-    }else{
-      //Log current database in SQLite folder
-      parseData()
-    }
+    parseData()
   }
 }
 

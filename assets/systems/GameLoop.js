@@ -2,8 +2,12 @@ import Entity from '../entities/index'
 import Constants from '../../Constants'
 import findWord from '../systems/findWord'
 import genWord from '../systems/genWord'
+
+//Function
+import { entitiesGenerator } from '../generator'
+
+//Variable
 import { Data, loadStatus } from '../systems/opendatabase'
-import { enemyGenerator } from '../generator'
 
 import _ from 'lodash'
 import entities from '../entities/index'
@@ -15,12 +19,12 @@ let engine = null
 let humanSelected = "", monsterSelected = ""
 
 //State Variables
-let didWordChange = false, deleteWord = false
-let phase = "monster"
+let didWordChange = false
+let phase = "alphabet"
 
 //Common Variables
 let currentWord = "", currentWordID = [], submitWord = ""
-let words = []
+let entitiesList, words = [], attackQueue = []
 
 const SIZE = Constants.MAX_WIDTH*0.073891
 const SIZE_ITEM = Constants.MAX_WIDTH*0.061576
@@ -71,7 +75,7 @@ function clearDisplayWordEntity(entitiesList){
 export default function (entities, args){
     const events = args.events
 
-    let entitiesList = Object.values(entities)
+    entitiesList = Object.values(entities)
     if(engine == null && loadStatus != true) engine = entitiesList[0].engine
 
     //Pre-Generate Words
@@ -80,29 +84,34 @@ export default function (entities, args){
         generateWord()
     }
 
+    //-----------------------------------------------------------------------------
+    if(Constants.stage != "Battle") return entities
+    
     if(loadStatus){
+        console.log()
 
         //Generate intitial entity
-        if(initialGenerate){
+        if(initialGenerate && words.length > 1){
             initialGenerate = false
-            return enemyGenerator(engine, "Battle")
+            return entitiesGenerator(engine, words)
+        }else if(initialGenerate){
+            return {}
         }
 
         if(events.length > 0 && events[0].status != undefined){
-            console.log(words)
 
             //Selecting Phase
             if(phase == "monster"){
 
                 //Selecting condition
-                if(events["0"].status.type == "Monster" && monsterSelected == ""){ //Select monster first
+                if(events["0"].status.type == "Monster" && monsterSelected == "" && events["0"].status.rested != true){ //Select monster first
                     monsterSelected = events[0]
                     monsterSelected.status.selected = true
                 }else if(events["0"].id == monsterSelected.id){ //Select same monster, remove the selected on both side
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
-                }else if(events["0"].status.type == "Monster" && monsterSelected != ""){ //Selecte different monster while there is selected
+                }else if(events["0"].status.type == "Monster" && monsterSelected != "" && events["0"].status.rested != true){ //Selecte different monster while there is selected
                     monsterSelected.status.selected = false
                     if(humanSelected != ""){
                         humanSelected.status.selected = false
@@ -118,10 +127,25 @@ export default function (entities, args){
 
                     //Clear out selected and move on to next phase when all monsters done attacking
                     //TODO
+                    
+
+                    //Remove target monster out of attackQueue
+                    attackQueue.splice(attackQueue.indexOf(monsterSelected), 1)
+
+                    //Clear state after attack
+                    monsterSelected.status.rested = true
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
-                    phase = "human"
+                    
+                    //Change phases
+                    if(attackQueue.length == 0){
+                        entitiesList = entitiesList.map(entity => {
+                            if(entity.status.type == "Monster") entity.status.rested = false
+                            return entity
+                        })
+                        phase = "human"
+                    }
 
 
                     console.log("Phase: " + phase + ", Random attack from humanity has been initialized!") //DEBUG
@@ -160,6 +184,9 @@ export default function (entities, args){
                         entitiesList = clearDisplayWordEntity(entitiesList)
                         entitiesList = clearWordEntity(entitiesList)
 
+                        //Put monsters available into attackQueue
+                        attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" })
+
                         //Move on to the next phases <monster attack human>
                         phase = "monster"
 
@@ -184,7 +211,7 @@ export default function (entities, args){
             wordEntityGenerator(entitiesList)
             phase = "alphabet"
 
-        }else if(didWordChange || deleteWord){
+        }else if(didWordChange){
 
             if(didWordChange){
                 for(let i=0; i<1; i++){
