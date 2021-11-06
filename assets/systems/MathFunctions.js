@@ -78,25 +78,28 @@ function ATKBoost(wordLength, BaseATK) {
 
 function getBonusATK(wordLength, entitiesList) {
   // let MonsterArrays = entitiesList.filter(entity => {return entity.status.type == "Monster"})[N].status
-  const nowStat = entitiesList.slice(); // backup data
+  let nowStat = [...entitiesList]; // backup data
 
   // let MonsterArrays = entitiesList.filter((entity) => {
   //   return entity.status.type == "Monster";
   // });
 
-  nowStat.forEach((monster) => {
+  nowStat = nowStat.map((monster) => {
     if (monster.status.type == "Monster") {
-      monster.status.Attack += Math.round(
-        ATKBoost(wordLength, monster.status.Attack)
-      );
+        monster.status.Attack += Math.round(ATKBoost(wordLength, monster.status.Attack));
+        return monster
     } else {
-      console.log("asdasdasdasdasd")
+      return monster
     }
   });
 
-  console.log("--------------------------NOW------------------------------------");
+  console.log(
+    "--------------------------NOW------------------------------------"
+  );
   console.log(nowStat);
-  console.log("--------------------------ENT------------------------------------");
+  console.log(
+    "--------------------------ENT------------------------------------"
+  );
   console.log(entitiesList);
 
   return entitiesList;
