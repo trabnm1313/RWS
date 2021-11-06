@@ -1,5 +1,4 @@
 let initialStat; // backup data
-let nowStat; // backup data
 
 function DamageCalculator(attackerATK, TargetDEF) {
   return attackerATK - attackerATK * (TargetDEF / 100);
@@ -14,10 +13,6 @@ function getNowStat(BaseStat, Level) {
   nowStat = result;
 
   return result;
-}
-
-function getInitialStatStat() {
-  return initialStat;
 }
 
 function MoneyDrops(wordLength, MoneyLevel) {
@@ -83,62 +78,90 @@ function ATKBoost(wordLength, BaseATK) {
 
 function getBonusATK(wordLength, entitiesList) {
   // let MonsterArrays = entitiesList.filter(entity => {return entity.status.type == "Monster"})[N].status
-  let MonsterArrays = entitiesList.filter((entity) => {
-    return entity.status.type == "Monster";
+  const nowStat = entitiesList.slice(); // backup data
+
+  // let MonsterArrays = entitiesList.filter((entity) => {
+  //   return entity.status.type == "Monster";
+  // });
+
+  nowStat.forEach((monster) => {
+    if (monster.status.type == "Monster") {
+      monster.status.Attack += Math.round(
+        ATKBoost(wordLength, monster.status.Attack)
+      );
+    } else {
+      console.log("asdasdasdasdasd")
+    }
   });
 
-  MonsterArrays.map((monster) => {
-    console.log(wordLength);
-    monster.status.Attack += Math.round(
-      ATKBoost(wordLength, monster.status.Attack)
-    );
-  });
+  console.log("--------------------------NOW------------------------------------");
+  console.log(nowStat);
+  console.log("--------------------------ENT------------------------------------");
+  console.log(entitiesList);
+
+  return entitiesList;
+}
+
+function clearBooster() {
+  console.log(nowStat);
 }
 
 // Example
-// {
-//   let entitiesList = [
-//     {
-//       status: {
-//         Attack: 100,
-//         Defense: 50,
-//         Health: 100,
-//         Speed: 50,
-//         Stamina: 0,
-//         id: "Ghost:0",
-//         selected: false,
-//         type: "Monster",
-//       },
-//     },
-//     {
-//       status: {
-//         Attack: 250,
-//         Defense: 50,
-//         Health: 100,
-//         Speed: 50,
-//         Stamina: 0,
-//         id: "Ghost:0",
-//         selected: false,
-//         type: "Monster",
-//       },
-//     },
-//     {
-//       status: {
-//         Attack: 500,
-//         Defense: 50,
-//         Health: 100,
-//         Speed: 50,
-//         Stamina: 0,
-//         id: "Ghost:0",
-//         selected: false,
-//         type: "Monster",
-//       },
-//     },
-//   ];
+{
+  let entitiesList = [
+    {
+      status: {
+        Attack: 100,
+        Defense: 50,
+        Health: 100,
+        Speed: 50,
+        Stamina: 0,
+        id: "Ghost:0",
+        selected: false,
+        type: "Monster",
+      },
+    },
+    {
+      status: {
+        Attack: 250,
+        Defense: 50,
+        Health: 100,
+        Speed: 50,
+        Stamina: 0,
+        id: "Ghost:0",
+        selected: false,
+        type: "Monster",
+      },
+    },
+    {
+      status: {
+        Attack: 500,
+        Defense: 50,
+        Health: 100,
+        Speed: 50,
+        Stamina: 0,
+        id: "Ghost:0",
+        selected: false,
+        type: "K",
+      },
+    },
+  ];
 
-//   let word = ["word", "over", "iamthe"];
+  let word = [
+    "word",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+    "over",
+  ];
 
-//   getBonusATK(word, entitiesList);
-
-//   console.log(entitiesList);
-// }
+  let x = getBonusATK(word, entitiesList);
+}
