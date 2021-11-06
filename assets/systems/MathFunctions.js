@@ -1,4 +1,5 @@
 let initialStat; // backup data
+let nowStat
 
 function DamageCalculator(attackerATK, TargetDEF) {
   return attackerATK - attackerATK * (TargetDEF / 100);
@@ -77,30 +78,14 @@ function ATKBoost(wordLength, BaseATK) {
 }
 
 function getBonusATK(wordLength, entitiesList) {
-  // let MonsterArrays = entitiesList.filter(entity => {return entity.status.type == "Monster"})[N].status
-  let nowStat = [...entitiesList]; // backup data
 
-  // let MonsterArrays = entitiesList.filter((entity) => {
-  //   return entity.status.type == "Monster";
-  // });
+  nowStat = JSON.parse(JSON.stringify(entitiesList))
 
-  nowStat = nowStat.map((monster) => {
+  entitiesList.forEach((monster) => {
     if (monster.status.type == "Monster") {
-        monster.status.Attack += Math.round(ATKBoost(wordLength, monster.status.Attack));
-        return monster
-    } else {
-      return monster
+      monster.status.Attack += Math.round(ATKBoost(wordLength, monster.status.Attack));
     }
   });
-
-  console.log(
-    "--------------------------NOW------------------------------------"
-  );
-  console.log(nowStat);
-  console.log(
-    "--------------------------ENT------------------------------------"
-  );
-  console.log(entitiesList);
 
   return entitiesList;
 }
