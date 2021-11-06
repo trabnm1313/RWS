@@ -1,5 +1,5 @@
 let initialStat; // backup data
-let nowStat
+let nowStat;
 
 function DamageCalculator(attackerATK, TargetDEF) {
   return attackerATK - attackerATK * (TargetDEF / 100);
@@ -11,37 +11,41 @@ function getNowStat(BaseStat, Level) {
     ATK: BaseStat.ATK * Level,
     DEF: BaseStat.DEF * Level,
   };
-  nowStat = result;
+
+  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
+  nowStat = JSON.parse(JSON.stringify(entitiesList));
 
   return result;
 }
 
-function MoneyDrops(wordLength, MoneyLevel) {
+function MoneyDrops(wordLength, MoneyLevel = 1) {
   let money = 0;
 
-  switch (wordLength) {
-    case 1:
-      money = 10 * MoneyLevel;
-      break;
-    case 2:
-      money = 50 * MoneyLevel;
-      break;
-    case 3:
-      money = 100 * MoneyLevel;
-      break;
-    case 4:
-      money = 200 * MoneyLevel;
-      break;
-    case 5:
-      money = 400 * MoneyLevel;
-      break;
-    case 6:
-      money = 800 * MoneyLevel;
-      break;
-    case 7:
-      money = 2000 * MoneyLevel;
-      break;
-  }
+  wordLength.map((wordLength) => {
+    switch (wordLength) {
+      case 1:
+        money += 10 * MoneyLevel;
+        break;
+      case 2:
+        money += 50 * MoneyLevel;
+        break;
+      case 3:
+        money += 100 * MoneyLevel;
+        break;
+      case 4:
+        money += 200 * MoneyLevel;
+        break;
+      case 5:
+        money += 400 * MoneyLevel;
+        break;
+      case 6:
+        money += 800 * MoneyLevel;
+        break;
+      case 7:
+        money = 2000 * MoneyLevel;
+        break;
+    }
+  });
 
   return money;
 }
@@ -77,13 +81,15 @@ function ATKBoost(wordLength, BaseATK) {
   return bonusATK;
 }
 
-function getBonusATK(wordLength, entitiesList) {
-
-  nowStat = JSON.parse(JSON.stringify(entitiesList))
+function getBonusATK(entitiesList, wordLength) {
+  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
+  nowStat = JSON.parse(JSON.stringify(entitiesList));
 
   entitiesList.forEach((monster) => {
     if (monster.status.type == "Monster") {
-      monster.status.Attack += Math.round(ATKBoost(wordLength, monster.status.Attack));
+      monster.status.Attack += Math.round(
+        ATKBoost(wordLength, monster.status.Attack)
+      );
     }
   });
 
@@ -91,65 +97,72 @@ function getBonusATK(wordLength, entitiesList) {
 }
 
 function clearBooster() {
-  console.log(nowStat);
+  return nowStat;
 }
 
 // Example
-{
-  let entitiesList = [
-    {
-      status: {
-        Attack: 100,
-        Defense: 50,
-        Health: 100,
-        Speed: 50,
-        Stamina: 0,
-        id: "Ghost:0",
-        selected: false,
-        type: "Monster",
-      },
-    },
-    {
-      status: {
-        Attack: 250,
-        Defense: 50,
-        Health: 100,
-        Speed: 50,
-        Stamina: 0,
-        id: "Ghost:0",
-        selected: false,
-        type: "Monster",
-      },
-    },
-    {
-      status: {
-        Attack: 500,
-        Defense: 50,
-        Health: 100,
-        Speed: 50,
-        Stamina: 0,
-        id: "Ghost:0",
-        selected: false,
-        type: "K",
-      },
-    },
-  ];
+// {
+//   let entitiesList = [
+//     {
+//       status: {
+//         Attack: 100,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "Monster",
+//       },
+//     },
+//     {
+//       status: {
+//         Attack: 250,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "Monster",
+//       },
+//     },
+//     {
+//       status: {
+//         Attack: 500,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "K",
+//       },
+//     },
+//   ];
 
-  let word = [
-    "word",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-    "over",
-  ];
+//   let word = [
+//     "word",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//     "over",
+//   ];
 
-  let x = getBonusATK(word, entitiesList);
-}
+//   let x = getBonusATK(word, entitiesList);
+
+//   console.log(x)
+
+//   console.log("--------------------------------------------------------")
+//   x = clearBooster()
+
+//   console.log(x)
+// }
