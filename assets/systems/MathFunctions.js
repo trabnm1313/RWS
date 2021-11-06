@@ -1,74 +1,144 @@
+let initialStat; // backup data
+let nowStat; // backup data
 
 function DamageCalculator(attackerATK, TargetDEF) {
-    return attackerATK - (attackerATK * (TargetDEF / 100))
+  return attackerATK - attackerATK * (TargetDEF / 100);
 }
 
-function getStat(BaseStat, Level) {
-    let result = {
-        "HP" : BaseStat.HP * Level ,
-        "ATK" : BaseStat.ATK * Level,
-        "DEF" : BaseStat.DEF * Level
-    }
-    return result
+function getNowStat(BaseStat, Level) {
+  let result = {
+    HP: BaseStat.HP * Level,
+    ATK: BaseStat.ATK * Level,
+    DEF: BaseStat.DEF * Level,
+  };
+  nowStat = result;
+
+  return result;
 }
 
+function getInitialStatStat() {
+  return initialStat;
+}
 
 function MoneyDrops(wordLength, MoneyLevel) {
-    let money = 0;
+  let money = 0;
 
-    switch(wordLength) {
-        case 1:
-            money = 10 * MoneyLevel
-            break
-        case 2:
-            money = 50 * MoneyLevel
-            break
-        case 3:
-            money = 100 * MoneyLevel
-            break
-        case 4:
-            money = 200 * MoneyLevel
-            break
-        case 5:
-            money = 400 * MoneyLevel
-            break
-        case 6:
-            money = 800 * MoneyLevel
-            break
-        case 7:
-            money = 2000 * MoneyLevel
-            break
-    }
+  switch (wordLength) {
+    case 1:
+      money = 10 * MoneyLevel;
+      break;
+    case 2:
+      money = 50 * MoneyLevel;
+      break;
+    case 3:
+      money = 100 * MoneyLevel;
+      break;
+    case 4:
+      money = 200 * MoneyLevel;
+      break;
+    case 5:
+      money = 400 * MoneyLevel;
+      break;
+    case 6:
+      money = 800 * MoneyLevel;
+      break;
+    case 7:
+      money = 2000 * MoneyLevel;
+      break;
+  }
 
-    return money
+  return money;
 }
 
 function ATKBoost(wordLength, BaseATK) {
-    let bonusATK = 0;
+  let bonusATK = 0;
 
-    switch(wordLength) {
-        case 1:
-            bonusATK = 0
-            break
-        case 2:
-            bonusATK = BaseATK * 0.01
-            break
-        case 3:
-            bonusATK = BaseATK * 0.02
-            break
-        case 4:
-            bonusATK = BaseATK * 0.03
-            break
-        case 5:
-            bonusATK = BaseATK * 0.05
-            break
-        case 6:
-            bonusATK = BaseATK * 0.13
-            break
-        case 7:
-            bonusATK = BaseATK * 0.3
-            break
+  wordLength.map((element) => {
+    switch (element.length) {
+      case 1:
+        bonusATK += 0;
+        break;
+      case 2:
+        bonusATK += BaseATK * 0.01;
+        break;
+      case 3:
+        bonusATK += BaseATK * 0.02;
+        break;
+      case 4:
+        bonusATK += BaseATK * 0.03;
+        break;
+      case 5:
+        bonusATK += BaseATK * 0.05;
+        break;
+      case 6:
+        bonusATK += BaseATK * 0.13;
+        break;
+      case 7:
+        bonusATK += BaseATK * 0.3;
+        break;
     }
-
-    return bonusATK
+  });
+  return bonusATK;
 }
+
+function getBonusATK(wordLength, entitiesList) {
+  // let MonsterArrays = entitiesList.filter(entity => {return entity.status.type == "Monster"})[N].status
+  let MonsterArrays = entitiesList.filter((entity) => {
+    return entity.status.type == "Monster";
+  });
+
+  MonsterArrays.map((monster) => {
+    console.log(wordLength);
+    monster.status.Attack += Math.round(
+      ATKBoost(wordLength, monster.status.Attack)
+    );
+  });
+}
+
+// Example
+// {
+//   let entitiesList = [
+//     {
+//       status: {
+//         Attack: 100,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "Monster",
+//       },
+//     },
+//     {
+//       status: {
+//         Attack: 250,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "Monster",
+//       },
+//     },
+//     {
+//       status: {
+//         Attack: 500,
+//         Defense: 50,
+//         Health: 100,
+//         Speed: 50,
+//         Stamina: 0,
+//         id: "Ghost:0",
+//         selected: false,
+//         type: "Monster",
+//       },
+//     },
+//   ];
+
+//   let word = ["word", "over", "iamthe"];
+
+//   getBonusATK(word, entitiesList);
+
+//   console.log(entitiesList);
+// }
