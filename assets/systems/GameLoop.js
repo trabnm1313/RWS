@@ -88,7 +88,6 @@ export default function (entities, args){
     if(Constants.stage != "Battle") return entities
     
     if(loadStatus){
-        console.log()
 
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
@@ -98,20 +97,21 @@ export default function (entities, args){
             return {}
         }
 
+        //If there is more than 0 events occurs (object being touch and dispatch events, etc)
         if(events.length > 0 && events[0].status != undefined){
 
             //Selecting Phase
             if(phase == "monster"){
 
                 //Selecting condition
-                if(events["0"].status.type == "Monster" && monsterSelected == "" && events["0"].status.rested != true){ //Select monster first
+                if(events["0"].status.type == "Monster" && monsterSelected == "" && events["0"].status.rested != true && events["0"].status.isAlive){ //Select monster first
                     monsterSelected = events[0]
                     monsterSelected.status.selected = true
                 }else if(events["0"].id == monsterSelected.id){ //Select same monster, remove the selected on both side
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
-                }else if(events["0"].status.type == "Monster" && monsterSelected != "" && events["0"].status.rested != true){ //Selecte different monster while there is selected
+                }else if(events["0"].status.type == "Monster" && monsterSelected != "" && events["0"].status.rested != true && events["0"].status.isAlive){ //Selecte different monster while there is selected
                     monsterSelected.status.selected = false
                     if(humanSelected != ""){
                         humanSelected.status.selected = false
@@ -119,14 +119,16 @@ export default function (entities, args){
                     }
                     monsterSelected = events[0]
                     monsterSelected.status.selected = true
-                }else if(events["0"].status.type == "Human" && monsterSelected != ""){ //Select human after monster
+                }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    console.log(monsterSelected.status.id + " Attack " + humanSelected.status.id) //DEBUG
-                    humanSelected.status.Health -= 1
-                    console.log(humanSelected.id + " have " + humanSelected.status.Health + " HP left.") //DEBUG
+                    humanSelected.status.Health -= 21
 
-                    //Clear out selected and move on to next phase when all monsters done attacking
-                    //TODO
+                    //Change if the attacked human is dead yet
+                    if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
+
+                    //DEBUG
+                    console.log(monsterSelected.status.id + " Attack " + humanSelected.status.id)
+                    console.log(humanSelected.id + " have " + humanSelected.status.Health + " HP left and isAlive:" + humanSelected.status.isAlive)
                     
 
                     //Remove target monster out of attackQueue
@@ -150,6 +152,7 @@ export default function (entities, args){
 
                     console.log("Phase: " + phase + ", Random attack from humanity has been initialized!") //DEBUG
                 }
+
 
             //Alphabet phase
             }else if(phase == "alphabet"){
@@ -185,7 +188,7 @@ export default function (entities, args){
                         entitiesList = clearWordEntity(entitiesList)
 
                         //Put monsters available into attackQueue
-                        attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" })
+                        attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
 
                         //Move on to the next phases <monster attack human>
                         phase = "monster"
@@ -206,6 +209,22 @@ export default function (entities, args){
         if(phase == "human"){
             //Random Attack algorithm below
             //TODO
+            let humanAttackQueue = entitiesList.filter(entity => {
+                return entity.status.type == "Human" && entity.status.isAlive == true
+            })
+
+            for(let i=0; i<humanAttackQueue.length; i++){
+                let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
+                let randomPosition = Math.floor(Math.random() * allMonster.length)
+                
+                allMonster[randomPosition].status.Health -= 21
+
+                //Check if monster dead yet
+                if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
+
+                console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)
+                console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive)
+            }
 
 
             wordEntityGenerator(entitiesList)

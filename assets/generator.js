@@ -54,9 +54,9 @@ const Alphabet = [
 let entities = {}
 
 const entitiesGenerator = (engine, words) => {
-    const SIZE = Constants.MAX_WIDTH*0.073891
-    const SIZE_ITEM = Constants.MAX_WIDTH*0.061576
-    const SIZE_BUTTON = Constants.MAX_WIDTH*0.067
+    let SIZE = Constants.MAX_WIDTH*0.073891
+    let SIZE_ITEM = Constants.MAX_WIDTH*0.061576
+    let SIZE_BUTTON = Constants.MAX_WIDTH*0.067
 
     //Left-side
     for(let i=0; i<3; i++){

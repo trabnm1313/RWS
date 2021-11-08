@@ -56,7 +56,7 @@ const Monster = (engine, pos, size, status, entity) => {
             Speed: 50,
             Stamina: 0,
             selected: false,
-            rested: false,
+            isAlive: true,
             type: "Monster"
         }
     }
@@ -68,6 +68,7 @@ const Monster = (engine, pos, size, status, entity) => {
         status,
         renderer: <_Monster/>
     }
+
 }
 
 export {

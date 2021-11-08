@@ -50,6 +50,8 @@ const Human = (engine, pos, size, status, entity) => {
             Speed: 50,
             Stamina: 0,
             selected: false,
+            isAlive: true,
+            rested: false,
             type: "Human"
         }
     }

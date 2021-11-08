@@ -1,4 +1,5 @@
 import { Dimensions } from "react-native";
+import React from "react"
 
 let stage = "Menu"
 
