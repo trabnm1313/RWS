@@ -26,7 +26,8 @@ const _HP_Potion = (props) => {
         body: {
             status: props.status,
             voice: voiceLine[Math.floor(Math.random() * (voiceLine.length-1))] //Random 0 - maxVoiceLine-1 to display when event occurs
-        }
+        },
+        status: props.status,
     }
 
     //Selected Color
@@ -38,7 +39,7 @@ const _HP_Potion = (props) => {
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-                <Image style={{width: '100%', height: '100%'}} source={require("../images/Items/HP_Potion.png")}></Image>
+                <Image style={{width: '100%', height: '100%', resizeMode: "contain"}} source={require("../../images/Items/HP_Potion.png")}></Image>
             </TouchableWithoutFeedback>
         </View>
     )
@@ -49,7 +50,8 @@ const HP_Potion = (engine, pos, size, status) => {
         status = {
             id: "HP_Potion:"+count++,
             Health: 100,
-            selected: false
+            selected: false,
+            type: "Potions"
         }
     }
 
