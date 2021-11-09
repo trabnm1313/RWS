@@ -1,10 +1,12 @@
 import Entity from '../entities/index'
 import Constants from '../../Constants'
-import findWord from '../systems/findWord'
+
 import genWord from '../systems/genWord'
 
 //Function
 import { entitiesGenerator } from '../generator'
+import {getBonusATK, clearBooster} from '../systems/MathFunctions'
+import findWord from './findWord'
 
 //Variable
 import { Data, loadStatus } from '../systems/opendatabase'
@@ -23,7 +25,8 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
-let currentWord = "", currentWordID = [], submitWord = ""
+let time = 0, timer = null
+let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
 
 const SIZE = Constants.MAX_WIDTH*0.073891
@@ -35,7 +38,6 @@ async function generateWord(){
 }
 
 function wordEntityGenerator(entitiesList){
-    entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
 
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
@@ -63,6 +65,8 @@ function clearDisplayWordEntity(entitiesList){
             }
             entity.status.selected = false
             return true
+        }else if(entity.status.button == "Confirm"){
+            return false
         }
         return true
     })
@@ -92,6 +96,10 @@ export default function (entities, args){
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
             initialGenerate = false
+            timer = setInterval(() => {
+                time += 1
+                console.log(time)
+            }, 1000)
             return entitiesGenerator(engine, words)
         }else if(initialGenerate){
             return {}
@@ -128,6 +136,7 @@ export default function (entities, args){
 
                     //DEBUG
                     console.log(monsterSelected.status.id + " Attack " + humanSelected.status.id)
+                    console.log(monsterSelected.status.Attack)
                     console.log(humanSelected.id + " have " + humanSelected.status.Health + " HP left and isAlive:" + humanSelected.status.isAlive)
                     
 
@@ -165,6 +174,18 @@ export default function (entities, args){
                     events[0].status.selected = true
                     //Todo
 
+                    let founded = findWord(currentWord)
+
+                    console.log(founded)
+                    if(founded == 0){
+                        console.log("Not founded")
+                        entitiesList = entitiesList.filter(entity => {return entity.status.button != "Confirm"})
+                    } else if(entitiesList.filter(entity => {return entity.status.button == "Confirm"}).length == 0){
+                        console.log("Founded and add once")
+                        entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
+                    }
+                    
+
                     didWordChange = true
                 }else if(events[0].status.type == "Alphabet_SHOW"){
                     entitiesList = clearDisplayWordEntity(entitiesList) //Clear current displayed word
@@ -178,7 +199,8 @@ export default function (entities, args){
                         entitiesList = entitiesList.filter(entity => {
                             return entity.status.type != "Alphabet"
                         })
-                        submitWord = currentWord
+
+                        submitWord.push(currentWord)
                         
                         //Check and apply buffs to current team members
                         //TODO
@@ -187,14 +209,11 @@ export default function (entities, args){
                         entitiesList = clearDisplayWordEntity(entitiesList)
                         entitiesList = clearWordEntity(entitiesList)
 
-                        //Put monsters available into attackQueue
-                        attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
-
-                        //Move on to the next phases <monster attack human>
-                        phase = "monster"
+                        wordEntityGenerator(entitiesList)
 
                         //Pre-Generate new set of words
                         generateWord()
+                        
                         console.log(submitWord) //DEBUG: show submit word
                     }
                     
@@ -206,7 +225,40 @@ export default function (entities, args){
 
 
         //Humanity phases
-        if(phase == "human"){
+        if(phase == "alphabet"){
+
+            //Change if currentWord change or not to putting displayed words
+            if(didWordChange){
+
+                if(didWordChange){
+                    for(let i=0; i<1; i++){
+                        let newEntity = {} //Create empty object
+                        for(let j=0; j<currentWord.length; j++) {
+                            newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.265+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.25+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, { id: currentWordID[j], letter: null, selected: false, type: "Alphabet_SHOW"}, currentWord[j]) //Assign key and entity to object
+                            entitiesList.push(newEntity)
+                        }
+                    }
+        
+                    didWordChange = false
+                }
+    
+            }
+
+            if(time == 180){
+                //Clear current displayed word and input
+                entitiesList = clearDisplayWordEntity(entitiesList)
+                entitiesList = clearWordEntity(entitiesList)
+
+                //boost monster ATK for word completed
+                entitiesList = getBonusATK(entitiesList, submitWord)
+
+                //Put monsters available into attackQueue
+                attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
+
+                phase = "monster"
+            }
+
+        }else if(phase == "human"){
             //Random Attack algorithm below
             //TODO
             let humanAttackQueue = entitiesList.filter(entity => {
@@ -226,23 +278,12 @@ export default function (entities, args){
                 console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive)
             }
 
-
+            entitiesList = clearBooster()
             wordEntityGenerator(entitiesList)
+
             phase = "alphabet"
-
-        }else if(didWordChange){
-
-            if(didWordChange){
-                for(let i=0; i<1; i++){
-                    let newEntity = {} //Create empty object
-                    for(let j=0; j<currentWord.length; j++) {
-                        newEntity = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.265+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.25+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, { id: currentWordID[j], letter: null, selected: false, type: "Alphabet_SHOW"}, currentWord[j]) //Assign key and entity to object
-                        entitiesList.push(newEntity)
-                    }
-                }
-    
-                didWordChange = false
-            }
+            submitWord = []
+            time = 0
 
         }
         

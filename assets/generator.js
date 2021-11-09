@@ -85,8 +85,6 @@ const entitiesGenerator = (engine, words) => {
     //     }
     // }
 
-    entities["confirm"] = Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm")
-
     for(let i=0; i<3; i++){
         for(let j=0; j<6; j++) {
             entities["Alphabet:" + i + j] = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j])  //Assign key and entity to object
