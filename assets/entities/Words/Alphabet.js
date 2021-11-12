@@ -9,6 +9,7 @@ const _Alphabet = (props) => {
     const bodyHeight = props.size.height
     const xBody = props.pos.x
     const yBody = props.pos.y
+    const animation = React.useRef(null)
 
     const response = {
         name: "ALPHABET_CLICKED",
@@ -22,7 +23,7 @@ const _Alphabet = (props) => {
         opacity = 'rgba(0,0,0,1)'
     }else opacity = 'rgba(255,255,255,1)'
 
-    const imageLoader = Word(props.status.letter)
+    const imageLoader = Word(props.status.letter, animation)
 
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, backgroundColor: opacity}}>

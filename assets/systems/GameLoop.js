@@ -76,6 +76,39 @@ function clearDisplayWordEntity(entitiesList){
     return newEntitiesList
 }
 
+function changePhases(toPhase){
+    if(toPhase == "alphabet"){
+
+        phase = "alphabet"
+        entitiesList = clearBooster(entitiesList)
+        wordEntityGenerator(entitiesList)
+        submitWord = []
+        time = 0
+
+    }else if(toPhase == "monster"){
+
+        if(time == 10){
+            //Clear current displayed word and input
+            entitiesList = clearDisplayWordEntity(entitiesList)
+            entitiesList = clearWordEntity(entitiesList)
+
+            //boost monster ATK for word completed
+            entitiesList = getBonusATK(entitiesList, submitWord)
+
+            //Put monsters available into attackQueue
+            attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
+            phase = "monster"
+        }
+
+    }else if(toPhase == "human"){
+        phase = "human"
+        entitiesList = entitiesList.map(entity => {
+            if(entity.status.type == "Monster") entity.status.rested = false
+            return entity
+        })
+    }
+}
+
 export default function (entities, args){
     const events = args.events
 
@@ -129,7 +162,7 @@ export default function (entities, args){
                     monsterSelected.status.selected = true
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    humanSelected.status.Health -= 21
+                    humanSelected.status.Health -= 100
 
                     //Change if the attacked human is dead yet
                     if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
@@ -148,14 +181,31 @@ export default function (entities, args){
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
+
+                    //if all human died, victory
+                    let humanLeft = entitiesList.filter(entity => { return entity.status.type == "Human" && entity.status.isAlive == true})
+                    if(humanLeft.length == 0){
+
+                        //mock gameLooping itself, no other stage yet
+                        //-----------------------------------------
+                        // changePhases("alphabet")
+                        // return entitiesGenerator(engine, words)
+                        //-----------------------------------------
+                        
+                        //Constants.stage = <whatever> here
+                        changePhases("alphabet")
+                        entitiesList = []
+                        Constants.stage = "Menu"
+                        initialGenerate = true
+                        time = 0    
+                        clearInterval(timer)
+                        return {}
+
+                    }
                     
                     //Change phases
                     if(attackQueue.length == 0){
-                        entitiesList = entitiesList.map(entity => {
-                            if(entity.status.type == "Monster") entity.status.rested = false
-                            return entity
-                        })
-                        phase = "human"
+                        changePhases("human")
                     }
 
 
@@ -244,19 +294,11 @@ export default function (entities, args){
     
             }
 
-            if(time == 180){
-                //Clear current displayed word and input
-                entitiesList = clearDisplayWordEntity(entitiesList)
-                entitiesList = clearWordEntity(entitiesList)
+            changePhases("monster")
 
-                //boost monster ATK for word completed
-                entitiesList = getBonusATK(entitiesList, submitWord)
+        }else if(phase == "monster"){
+            //TODO
 
-                //Put monsters available into attackQueue
-                attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
-
-                phase = "monster"
-            }
 
         }else if(phase == "human"){
             //Random Attack algorithm below
@@ -274,16 +316,31 @@ export default function (entities, args){
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
 
+                let monsterLeft = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true})
+                if(monsterLeft.length == 0){
+
+                    //mock gameLooping itself, no other stage yet
+                    //-----------------------------------------
+                    // changePhases("alphabet")
+                    // return entitiesGenerator(engine, words)
+                    //-----------------------------------------
+                    
+                    //Constants.stage = <whatever> here
+                    changePhases("alphabet")
+                    entitiesList = []
+                    Constants.stage = "Menu"
+                    initialGenerate = true
+                    time = 0    
+                    clearInterval(timer)
+                    return {}
+
+                }
+
                 console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)
                 console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive)
             }
 
-            entitiesList = clearBooster()
-            wordEntityGenerator(entitiesList)
-
-            phase = "alphabet"
-            submitWord = []
-            time = 0
+            changePhases("alphabet")
 
         }
         

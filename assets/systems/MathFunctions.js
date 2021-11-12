@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import entities from '../entities';
 
 let initialStat; // backup data
 let nowStat = []
@@ -99,8 +100,10 @@ function getBonusATK(entitiesList, wordLength) {
   return entitiesList;
 }
 
-function clearBooster() {
-  return nowStat;
+function clearBooster(entitiesList) {
+  let newEntitiesList = entitiesList.filter(entity => { return entity.status.type != "Monster" })
+  let oldMonsterStats = nowStat.filter(entity => { return entity.status.type == "Monster" })
+  return [ ...newEntitiesList, ...oldMonsterStats ]
 }
 
 export {

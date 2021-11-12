@@ -1,9 +1,10 @@
 import { Image, StyleSheet } from "react-native";
+import LottieView from 'lottie-react-native'
 import React from "react"
 
-export default (letter) => {
+export default (item, animation) => {
 
-    switch (letter) {
+    switch (item) {
         case "A": return <Image style={styles.button} source={require("../../images/Alphabet/A.png")} />
         case "B": return <Image style={styles.button} source={require("../../images/Alphabet/B.png")} />
         case "C": return <Image style={styles.button} source={require("../../images/Alphabet/C.png")} />
@@ -21,7 +22,7 @@ export default (letter) => {
         case "O": return <Image style={styles.button} source={require("../../images/Alphabet/O.png")} />
         case "P": return <Image style={styles.button} source={require("../../images/Alphabet/P.png")} />
         case "Q": return <Image style={styles.button} source={require("../../images/Alphabet/Q.png")} />
-        case "R": return <Image style={styles.button} source={require("../../images/Alphabet/R.png")} />
+        case "R": return <LottieView ref={animation} source={require("../../images/Alphabet/R.json")}></LottieView>
         case "S": return <Image style={styles.button} source={require("../../images/Alphabet/S.png")} />
         case "T": return <Image style={styles.button} source={require("../../images/Alphabet/T.png")} />
         case "U": return <Image style={styles.button} source={require("../../images/Alphabet/U.png")} />

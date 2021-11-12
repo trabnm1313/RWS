@@ -2,31 +2,21 @@ import React from 'react'
 import { Image, NativeModules, Touchable, TouchableWithoutFeedback, View } from 'react-native'
 import LottieView from 'lottie-react-native'
 
-let count = 0
+import Items from "./Items"
 
-const voiceLine = [
-    "You clicked me",
-    "Ouch!!",
-    "Hey, Don't touch me",
-    "What are you doing!",
-    "...",
-    "....",
-    "....."
-]
+let count = 0
 
 const _HP_Potion = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height
     const xBody = props.pos.x
     const yBody = props.pos.y
+    const animation = React.useRef(null)
 
     const response = {
-        name: "POTION_CLICKED",
+        name: "ITEM_CLICKED",
         id: props.status.id,
-        body: {
-            status: props.status,
-            voice: voiceLine[Math.floor(Math.random() * (voiceLine.length-1))] //Random 0 - maxVoiceLine-1 to display when event occurs
-        }
+        status: props.status,
     }
 
     //Selected Color
@@ -35,21 +25,24 @@ const _HP_Potion = (props) => {
         selectedColor = "yellow"
     }else selectedColor = "black"
 
+    const imageLoader = Items(props.status.item, animation)
+
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
-                <Image style={{width: '100%', height: '100%'}} source={require("../images/Items/HP_Potion.png")}></Image>
+                {imageLoader}
             </TouchableWithoutFeedback>
         </View>
     )
 }
 
-const HP_Potion = (engine, pos, size, status) => {
+const HP_Potion = (engine, pos, size, status, item) => {
     if(status == null){
         status = {
-            id: "HP_Potion:"+count++,
+            id: item+":"+count++,
             Health: 100,
-            selected: false
+            selected: false,
+            item: item
         }
     }
 
