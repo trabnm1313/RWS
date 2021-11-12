@@ -42,6 +42,7 @@ const Item = (engine, pos, size, status, item) => {
             id: item+":"+count++,
             Health: 100,
             selected: false,
+            type: "Item",
             item: item
         }
     }
