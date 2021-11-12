@@ -6,7 +6,7 @@ import Items from "./Items"
 
 let count = 0
 
-const _HP_Potion = (props) => {
+const _Item = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height
     const xBody = props.pos.x
@@ -36,7 +36,7 @@ const _HP_Potion = (props) => {
     )
 }
 
-const HP_Potion = (engine, pos, size, status, item) => {
+const Item = (engine, pos, size, status, item) => {
     if(status == null){
         status = {
             id: item+":"+count++,
@@ -52,10 +52,10 @@ const HP_Potion = (engine, pos, size, status, item) => {
         pos,
         size,
         status,
-        renderer: <_HP_Potion/>
+        renderer: <_Item/>
     }
 }
 
 export {
-    HP_Potion
+    Item
 }
