@@ -1,11 +1,18 @@
 import Constants from "../../Constants"
 import Entity from "../entities/index"
-import HP_Potion from "../entities/Items/HP_Potion"
+import { random } from "lodash"
 // import { loadStatus } from "./opendatabase"
 
 let engine = null
-let fuck = null
+let state1 = null
 let pocket = []
+let itemInshop = []
+
+function randomItem() {
+    while(itemInshop.length <= 9) {
+        // itemInshop.push(Entity.allItem[0](engine, {x: 230, y: 10}, {width: 100, height: 60}, null))
+    }
+}
 
 function buy(item) {
     pocket.push(item)
@@ -19,8 +26,8 @@ export default function(entities, args){
     let entitiesList = Object.values(entities)
     if(engine == null) engine = entitiesList[0].engine
     
-    if (fuck === null) {
-        fuck = "yes"
+    if (state1 === null) {
+        state1 = "yes"
         entitiesList.push(Entity.HP_Potion(engine, {x: 230, y: 10}, {width: 100, height: 60}, null))
         entitiesList.push(Entity.HP_Potion(engine, {x: 340, y: 10}, {width: 100, height: 60}, null))
         entitiesList.push(Entity.HP_Potion(engine, {x: 460, y: 10}, {width: 100, height: 60}, null))

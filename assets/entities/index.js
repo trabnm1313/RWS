@@ -8,7 +8,7 @@ import { Monster } from "./Monsters/Monster"
 import { Alphabet } from "./Words/Alphabet"
 
 //Items
-import { HP_Potion } from "./Items/HP_Potion"
+import { Item }from "./Items/Item"
 
 //Components
 import { Button } from "./Components/Button"
@@ -17,6 +17,6 @@ export default {
     Human,
     Monster,
     Alphabet,
-    Button,
-    HP_Potion
+    Item,
+    Button
 }
