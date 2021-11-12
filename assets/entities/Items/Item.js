@@ -40,7 +40,6 @@ const Item = (engine, pos, size, status, item) => {
     if(status == null){
         status = {
             id: item+":"+count++,
-            Health: 100,
             selected: false,
             type: "Item",
             item: item
