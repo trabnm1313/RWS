@@ -298,6 +298,7 @@ export default function (entities, args){
 
         }else if(phase == "monster"){
             //TODO
+            console.log("HELP")
 
 
         }else if(phase == "human"){
