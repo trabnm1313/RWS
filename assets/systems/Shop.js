@@ -1,17 +1,23 @@
-import { random } from "lodash";
+import { forEach, random } from "lodash";
 import Constants from "../../Constants";
 import Entity from "../entities/index";
 // import { loadStatus } from "./opendatabase"
 
 let engine = null;
-let state1 = null;
+let state1 = null; // render state checker
 
-let pocket = [];
-let monsterList = [];
-let itemInshop = [];
-let money = 1000;
-let wannaRandom = true;
+// from player
+let money = 1000; // player's money
+let pocket = []; // player's item
+let monsterList = []; // player's monster team
 
+// state in shop
+let itemInshop = []; // random item list
+let wannaRandom = true; // first time must be true
+let itemFullLenght = 4; // can be change
+let monterFullLenght = 4; // can be change
+
+// Item that gonna random appear in shop (MUST BE CHANGE)
 let allItem = [
   {
     type: "Monster",
@@ -31,9 +37,12 @@ let allItem = [
   },
 ];
 
+// Buy function
 function buyingItem(money, cost, item) {
-  let doHave = null;
-  let isFull = null;
+  let doHave = null; // checking state
+  let isFull = null; // checking state
+
+  // Can't have the same item in pocket
   if (item.type == "Item") {
     doHave = pocket.map((element) => {
       if (element.item == item.item) {
@@ -41,57 +50,73 @@ function buyingItem(money, cost, item) {
       } else return false;
     });
 
-    isFull = pocket.length == 4 ? true : false
+    // is the pocket full
+    isFull = pocket.length == pocketFullLenght ? true : false;
   } else if (item.type == "Monster") {
-    doHave = [false]
-    isFull = monsterList.length == 6 ? true : false
+    // monster can be the same
+    doHave = [false];
+    // is the Team full
+    isFull = monsterList.length == monterFullLenght ? true : false;
   }
 
   if (money < cost) {
     console.log("NOT ENOUGH MONEY");
-    return 0;
+    return money;
   } else if (doHave.includes(true)) {
     console.log("SAME");
-    return 0;
+    return money;
   } else if (isFull) {
     console.log("POCKET FULL");
-    return 0;
+    return money;
   } else {
-    pocket.push(item);
+    if (item.type == "Item") {
+      pocket.push(item);
+    } else if (item.type == "Monster") {
+      monsterList.push(item);
+    }
+
+    state1 = null;
     return money - cost;
   }
 }
 
+// random item in shop function
 function randomItem() {
   while (itemInshop.length < 9) {
     itemInshop.push(allItem[random(0, allItem.length - 1)]);
   }
 }
 
+// renderer
 export default function (entities, args) {
   const events = args.events;
 
   let entitiesList = Object.values(entities);
   if (engine == null) engine = entitiesList[0].engine;
 
+  // make it render just once time you want it run
   if (state1 === null) {
     console.log("rendered");
-    state1 = "yes";
+    state1 = "yes"; // checked state
 
+    // the ramdom statement
     if (wannaRandom == true) {
       console.log("random");
       randomItem();
       wannaRandom = false;
     }
 
-    let counter = 0;
-    let xCounter = 230;
-    let yCounter = 10;
+    // position of shop item that displayed
+    let counter = 0; // position in itemInshop array
+    let xCounter = 230; // starter x
+    let yCounter = 10; // starter y
 
+    // loop row
     for (let i = 0; i < 3; i++) {
-      xCounter = 230;
-      yCounter += 65;
+      xCounter = 230; // can be change
+      yCounter += 65; // can be change
 
+      // loop display
       for (let j = 0; j < 3; j++) {
         if (itemInshop[counter].type == "Item") {
           entitiesList.push(
@@ -100,7 +125,7 @@ export default function (entities, args) {
               { x: xCounter, y: yCounter },
               { width: 100, height: 60 },
               null,
-              itemInshop[counter].value
+              itemInshop[counter].value // MUST BE CHANGE
             )
           );
         } else if (itemInshop[counter].type == "Monster") {
@@ -110,7 +135,7 @@ export default function (entities, args) {
               { x: xCounter, y: yCounter },
               { width: 100, height: 60 },
               null,
-              itemInshop[counter].value
+              itemInshop[counter].value // MUST BE CHANGE
             )
           );
         }
@@ -119,6 +144,47 @@ export default function (entities, args) {
         counter++;
       }
     }
+
+    // display play's team
+    monsterList.forEach((monster, index) => {
+      if (index == 0) {
+        entitiesList.push(
+          Entity.Monster(
+            engine,
+            { x: 0, y: 0 },
+            { width: 100, height: 60 },
+            monster
+          )
+        );
+      } else if (index == 1) {
+        entitiesList.push(
+          Entity.Monster(
+            engine,
+            { x: 0, y: 65 },
+            { width: 100, height: 60 },
+            monster
+          )
+        );
+      } else if (index == 2) {
+        entitiesList.push(
+          Entity.Monster(
+            engine,
+            { x: 0, y: 130 },
+            { width: 100, height: 60 },
+            monster
+          )
+        );
+      } else if (index == 3) {
+        entitiesList.push(
+          Entity.Monster(
+            engine,
+            { x: 0, y: 195 },
+            { width: 100, height: 60 },
+            monster
+          )
+        );
+      }
+    });
   }
 
   // Event Handler
@@ -131,7 +197,7 @@ export default function (entities, args) {
         console.log(money);
       }
     } else if (selected.type === "Monster") {
-      money = buyingItem(money, 990, selected);
+      money = buyingItem(money, 10, selected);
       console.log(money);
     }
   }

@@ -53,8 +53,6 @@ const Monster = (engine, pos, size, status, entity) => {
             Health: 100,
             Attack: 100,
             Defense: 50,
-            Speed: 50,
-            Stamina: 0,
             selected: false,
             isAlive: true,
             type: "Monster"
