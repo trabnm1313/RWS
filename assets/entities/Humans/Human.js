@@ -43,7 +43,6 @@ const _Human = (props) => {
 const Human = (engine, pos, size, status, entity) => {
     if(status == null){
         status = {
-            id: entity+":"+count++,
             Health: 100,
             Attack: 100,
             Defense: 50,
@@ -55,6 +54,8 @@ const Human = (engine, pos, size, status, entity) => {
             type: "Human"
         }
     }
+
+    status["id"] = entity+":"+count++
 
     return{
         engine,

@@ -49,7 +49,6 @@ const _Monster = (props) => {
 const Monster = (engine, pos, size, status, entity) => {
     if(status == null){
         status = {
-            id: entity+":"+count++,
             Health: 100,
             Attack: 100,
             Defense: 50,
@@ -60,6 +59,8 @@ const Monster = (engine, pos, size, status, entity) => {
             type: "Monster"
         }
     }
+
+    status["id"] = entity+":"+count++
 
     return{
         engine,

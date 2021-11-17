@@ -4,6 +4,7 @@ import _ from 'lodash'
 import React from 'react'
 import { Image } from 'react-native'
 import { loadStatus } from './systems/opendatabase'
+import * as MathFunction from './systems/MathFunctions'
 
 const CharacterList = []
 const MonsterList = [
@@ -51,9 +52,18 @@ const Alphabet = [
     "Z"
 ]
 
+let BaseStats = {
+    Health: 100,
+    Attack: 100,
+    Defense: 50,
+    selected: false,
+    isAlive: true,
+    type: "Human"
+}
+
 let entities = {}
 
-const entitiesGenerator = (engine, words) => {
+const entitiesGenerator = (engine, words, Level) => {
     let SIZE = Constants.MAX_WIDTH*0.073891
     let SIZE_ITEM = Constants.MAX_WIDTH*0.061576
     let SIZE_BUTTON = Constants.MAX_WIDTH*0.067
@@ -71,19 +81,19 @@ const entitiesGenerator = (engine, words) => {
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
         for(let j=0; j<2; j++) {
-            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, null, "Soldier") //Assign key and entity to object
+            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Level), "Soldier") //Assign key and entity to object
             entities["Human:"+i+''+j] = newEntity
         }
     }
 
     // Items
-    // for(let i=0; i<2; i++){
-    //     let newEntity = {} //Create empty object
-    //     for(let j=0; j<2; j++) {
-    //         newEntity = Entity.HP_Potion(engine, {x: Constants.MAX_WIDTH*0.03+(j*SIZE_ITEM), y: Constants.MAX_HEIGHT*0.6+(i*SIZE_ITEM)}, {width: SIZE_ITEM, height: SIZE_ITEM}) //Assign key and entity to object
-    //         entities["Item:"+i+''+j] = newEntity
-    //     }
-    // }
+    for(let i=0; i<2; i++){
+        let newEntity = {} //Create empty object
+        for(let j=0; j<2; j++) {
+            newEntity = Entity.Item(engine, {x: Constants.MAX_WIDTH*0.03+(j*SIZE_ITEM), y: Constants.MAX_HEIGHT*0.6+(i*SIZE_ITEM)}, {width: SIZE_ITEM, height: SIZE_ITEM}, null, "HP_POTION") //Assign key and entity to object
+            entities["Item:"+i+''+j] = newEntity
+        }
+    }
 
     for(let i=0; i<3; i++){
         for(let j=0; j<6; j++) {

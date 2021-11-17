@@ -5,7 +5,7 @@ import genWord from '../systems/genWord'
 
 //Function
 import { entitiesGenerator } from '../generator'
-import {getBonusATK, clearBooster} from '../systems/MathFunctions'
+import {getBonusATK, clearBooster, getNowStat} from '../systems/MathFunctions'
 import findWord from './findWord'
 
 //Variable
@@ -25,6 +25,7 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
+let Level = 1
 let time = 0, timer = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
@@ -133,7 +134,7 @@ export default function (entities, args){
                 time += 1
                 console.log(time)
             }, 1000)
-            return entitiesGenerator(engine, words)
+            return entitiesGenerator(engine, words, Level)
         }else if(initialGenerate){
             return {}
         }
@@ -194,6 +195,7 @@ export default function (entities, args){
                         
                         //Constants.stage = <whatever> here
                         changePhases("alphabet")
+                        Level += 1
                         entitiesList = []
                         Constants.stage = "Menu"
                         initialGenerate = true
@@ -203,13 +205,21 @@ export default function (entities, args){
 
                     }
                     
-                    //Change phases
+                    //Change phases when the last monster attacked
                     if(attackQueue.length == 0){
                         changePhases("human")
                     }
 
 
                     console.log("Phase: " + phase + ", Random attack from humanity has been initialized!") //DEBUG
+                }
+
+                //Check if player click at items
+                if(events["0"].status.type == "Item"){
+
+                    console.log("You clicked at " + events["0"].status.item)
+                    console.log("<-- Insert What to do here in GameLoop.js -->")
+
                 }
 
 
@@ -298,7 +308,6 @@ export default function (entities, args){
 
         }else if(phase == "monster"){
             //TODO
-            console.log("HELP")
 
 
         }else if(phase == "human"){

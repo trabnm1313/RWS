@@ -9,16 +9,11 @@ function DamageCalculator(attackerATK, TargetDEF) {
 }
 
 function getNowStat(BaseStat, Level) {
-  let result = {
-    HP: BaseStat.HP * Level,
-    ATK: BaseStat.ATK * Level,
-    DEF: BaseStat.DEF * Level,
-  };
+  BaseStat.Health *= Level
+  BaseStat.Attack *= Level
+  BaseStat.Defense *= Level
 
-  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
-  nowStat = JSON.parse(JSON.stringify(entitiesList));
-
-  return result;
+  return BaseStat
 }
 
 function MoneyDrops(wordLength, MoneyLevel = 1) {
@@ -107,6 +102,7 @@ function clearBooster(entitiesList) {
 }
 
 export {
+  getNowStat,
   getBonusATK,
   clearBooster
 }
