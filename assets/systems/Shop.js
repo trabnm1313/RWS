@@ -16,6 +16,10 @@ let itemInshop = []; // random item list
 let wannaRandom = true; // first time must be true
 let itemFullLenght = 4; // can be change
 let monterFullLenght = 4; // can be change
+let price = {
+  potion: 500,
+  monster: 1000
+} // price state
 
 // Item that gonna random appear in shop (MUST BE CHANGE)
 let allItem = [
@@ -38,6 +42,7 @@ let allItem = [
 ];
 
 // Buy function
+// return LEFT MONEY
 function buyingItem(money, cost, item) {
   let doHave = null; // checking state
   let isFull = null; // checking state
@@ -81,6 +86,7 @@ function buyingItem(money, cost, item) {
 }
 
 // random item in shop function
+// NO RETURN
 function randomItem() {
   while (itemInshop.length < 9) {
     itemInshop.push(allItem[random(0, allItem.length - 1)]);
@@ -193,11 +199,11 @@ export default function (entities, args) {
 
     if (selected.type == "Item") {
       if (selected.item === "HP_POTION") {
-        money = buyingItem(money, 510, selected);
+        money = buyingItem(money, price.potion, selected);
         console.log(money);
       }
     } else if (selected.type === "Monster") {
-      money = buyingItem(money, 10, selected);
+      money = buyingItem(money, price.monster, selected);
       console.log(money);
     }
   }
