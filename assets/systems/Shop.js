@@ -56,7 +56,7 @@ function buyingItem(money, cost, item) {
     });
 
     // is the pocket full
-    isFull = pocket.length == pocketFullLenght ? true : false;
+    isFull = pocket.length == itemFullLenght ? true : false;
   } else if (item.type == "Monster") {
     // monster can be the same
     doHave = [false];
@@ -100,111 +100,113 @@ export default function (entities, args) {
   let entitiesList = Object.values(entities);
   if (engine == null) engine = entitiesList[0].engine;
 
-  // make it render just once time you want it run
-  if (state1 === null) {
-    console.log("rendered");
-    state1 = "yes"; // checked state
+  if(Constants.stage == "Shop"){
+    // make it render just once time you want it run
+    if (state1 === null) {
+      console.log("rendered");
+      state1 = "yes"; // checked state
 
-    // the ramdom statement
-    if (wannaRandom == true) {
-      console.log("random");
-      randomItem();
-      wannaRandom = false;
-    }
+      // the ramdom statement
+      if (wannaRandom == true) {
+        console.log("random");
+        randomItem();
+        wannaRandom = false;
+      }
 
-    // position of shop item that displayed
-    let counter = 0; // position in itemInshop array
-    let xCounter = 230; // starter x
-    let yCounter = 10; // starter y
+      // position of shop item that displayed
+      let counter = 0; // position in itemInshop array
+      let xCounter = 230; // starter x
+      let yCounter = 10; // starter y
 
-    // loop row
-    for (let i = 0; i < 3; i++) {
-      xCounter = 230; // can be change
-      yCounter += 65; // can be change
+      // loop row
+      for (let i = 0; i < 3; i++) {
+        xCounter = 230; // can be change
+        yCounter += 65; // can be change
 
-      // loop display
-      for (let j = 0; j < 3; j++) {
-        if (itemInshop[counter].type == "Item") {
-          entitiesList.push(
-            Entity.Item(
-              engine,
-              { x: xCounter, y: yCounter },
-              { width: 100, height: 60 },
-              null,
-              itemInshop[counter].value // MUST BE CHANGE
-            )
-          );
-        } else if (itemInshop[counter].type == "Monster") {
+        // loop display
+        for (let j = 0; j < 3; j++) {
+          if (itemInshop[counter].type == "Item") {
+            entitiesList.push(
+              Entity.Item(
+                engine,
+                { x: xCounter, y: yCounter },
+                { width: 100, height: 60 },
+                null,
+                itemInshop[counter].value // MUST BE CHANGE
+              )
+            );
+          } else if (itemInshop[counter].type == "Monster") {
+            entitiesList.push(
+              Entity.Monster(
+                engine,
+                { x: xCounter, y: yCounter },
+                { width: 100, height: 60 },
+                null,
+                itemInshop[counter].value // MUST BE CHANGE
+              )
+            );
+          }
+
+          xCounter += 110;
+          counter++;
+        }
+      }
+
+      // display play's team
+      monsterList.forEach((monster, index) => {
+        if (index == 0) {
           entitiesList.push(
             Entity.Monster(
               engine,
-              { x: xCounter, y: yCounter },
+              { x: 0, y: 0 },
               { width: 100, height: 60 },
-              null,
-              itemInshop[counter].value // MUST BE CHANGE
+              monster
+            )
+          );
+        } else if (index == 1) {
+          entitiesList.push(
+            Entity.Monster(
+              engine,
+              { x: 0, y: 65 },
+              { width: 100, height: 60 },
+              monster
+            )
+          );
+        } else if (index == 2) {
+          entitiesList.push(
+            Entity.Monster(
+              engine,
+              { x: 0, y: 130 },
+              { width: 100, height: 60 },
+              monster
+            )
+          );
+        } else if (index == 3) {
+          entitiesList.push(
+            Entity.Monster(
+              engine,
+              { x: 0, y: 195 },
+              { width: 100, height: 60 },
+              monster
             )
           );
         }
-
-        xCounter += 110;
-        counter++;
-      }
+      });
     }
 
-    // display play's team
-    monsterList.forEach((monster, index) => {
-      if (index == 0) {
-        entitiesList.push(
-          Entity.Monster(
-            engine,
-            { x: 0, y: 0 },
-            { width: 100, height: 60 },
-            monster
-          )
-        );
-      } else if (index == 1) {
-        entitiesList.push(
-          Entity.Monster(
-            engine,
-            { x: 0, y: 65 },
-            { width: 100, height: 60 },
-            monster
-          )
-        );
-      } else if (index == 2) {
-        entitiesList.push(
-          Entity.Monster(
-            engine,
-            { x: 0, y: 130 },
-            { width: 100, height: 60 },
-            monster
-          )
-        );
-      } else if (index == 3) {
-        entitiesList.push(
-          Entity.Monster(
-            engine,
-            { x: 0, y: 195 },
-            { width: 100, height: 60 },
-            monster
-          )
-        );
-      }
-    });
-  }
+    // Event Handler
+    if (events.length > 0 && events[0].status != undefined) {
+      let selected = events["0"].status;
 
-  // Event Handler
-  if (events.length > 0 && events[0].status != undefined) {
-    let selected = events["0"].status;
-
-    if (selected.type == "Item") {
-      if (selected.item === "HP_POTION") {
-        money = buyingItem(money, price.potion, selected);
+      if (selected.type == "Item") {
+        if (selected.item === "HP_POTION") {
+          money = buyingItem(money, price.potion, selected);
+          console.log(money);
+        }
+      } else if (selected.type === "Monster") {
+        money = buyingItem(money, price.monster, selected);
         console.log(money);
       }
-    } else if (selected.type === "Monster") {
-      money = buyingItem(money, price.monster, selected);
-      console.log(money);
     }
   }
 
