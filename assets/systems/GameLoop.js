@@ -217,6 +217,21 @@ export default function (entities, args){
                             if(entity.status.type == "Monster") entity.status.Health += 20
                             return entity
                         })
+                    }else if(events["0"].status.item == "DAMAGE_POTION"){
+                        entitiesList = entitiesList.map(entity => {
+                            if(entity.status.type == "Monster") entity.status.Attack += (entity.status.Attack * 20 ) / 100
+                            return entity
+                        })
+                    }else if(events["0"].status.item == "DEFENSE_POTION"){
+                        entitiesList = entitiesList.map(entity => {
+                            if(entity.status.type == "Monster") entity.status.Defense += (entity.status.Defense * 20 ) / 100
+                            return entity
+                        })
+                    }else if(events["0"].status.item == "BOMB"){
+                        entitiesList = entitiesList.map(entity => {
+                            if(entity.status.type == "Human") entity.status.Health -= (entity.status.Health * 30) / 100 
+                            return entity
+                        })
                     }
 
                     //remove used item
