@@ -25,7 +25,6 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
-let Level = 1
 let time = 0, timer = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
@@ -79,32 +78,22 @@ function clearDisplayWordEntity(entitiesList){
 
 function changePhases(toPhase){
     if(toPhase == "alphabet"){
-
         phase = "alphabet"
-        entitiesList = clearBooster(entitiesList)
+
         wordEntityGenerator(entitiesList)
         submitWord = []
         time = 0
 
     }else if(toPhase == "monster"){
 
-        if(time == 10){
-            //Clear current displayed word and input
-            entitiesList = clearDisplayWordEntity(entitiesList)
-            entitiesList = clearWordEntity(entitiesList)
-
-            //boost monster ATK for word completed
-            entitiesList = getBonusATK(entitiesList, submitWord)
-
-            //Put monsters available into attackQueue
-            attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
-            phase = "monster"
-        }
+        phase = "monster"
 
     }else if(toPhase == "human"){
         phase = "human"
         entitiesList = entitiesList.map(entity => {
-            if(entity.status.type == "Monster") entity.status.rested = false
+            if(entity.status.type == "Monster"){
+                entity.status.rested = false
+            }
             return entity
         })
     }
@@ -129,18 +118,24 @@ export default function (entities, args){
 
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
+            entitiesList = []
             initialGenerate = false
             timer = setInterval(() => {
                 time += 1
                 console.log(time)
             }, 1000)
-            return entitiesGenerator(engine, words, Level)
+            generateWord()
+            return entitiesGenerator(engine, words, Constants.Level)
         }else if(initialGenerate){
             return {}
         }
 
         //If there is more than 0 events occurs (object being touch and dispatch events, etc)
         if(events.length > 0 && events[0].status != undefined){
+            let whatSize = entitiesList.filter(entity => {return entity.status.type == "Monster"})
+            for(let i=0; i<whatSize.length; i++){
+                console.log(whatSize[i].status, "HUMAN")
+            }
 
             //Selecting Phase
             if(phase == "monster"){
@@ -163,7 +158,7 @@ export default function (entities, args){
                     monsterSelected.status.selected = true
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    humanSelected.status.Health -= 100
+                    humanSelected.status.Health -= 200
 
                     //Change if the attacked human is dead yet
                     if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
@@ -195,11 +190,11 @@ export default function (entities, args){
                         
                         //Constants.stage = <whatever> here
                         changePhases("alphabet")
-                        Level += 1
                         entitiesList = []
-                        Constants.stage = "Menu"
+                        Constants.Level += 1
+                        Constants.stage = "Shop"
                         initialGenerate = true
-                        time = 0    
+                        time = 0
                         clearInterval(timer)
                         return {}
 
@@ -217,8 +212,16 @@ export default function (entities, args){
                 //Check if player click at items
                 if(events["0"].status.type == "Item"){
 
-                    console.log("You clicked at " + events["0"].status.item)
-                    console.log("<-- Insert What to do here in GameLoop.js -->")
+                    if(events["0"].status.item == "HP_POTION"){
+                        entitiesList = entitiesList.map(entity => {
+                            if(entity.status.type == "Monster") entity.status.Health += 20
+                            return entity
+                        })
+                    }
+
+                    //remove used item
+                    entitiesList = entitiesList.filter(entity => {return entity.status.id != events["0"].status.id})
+
 
                 }
 
@@ -304,7 +307,19 @@ export default function (entities, args){
     
             }
 
-            changePhases("monster")
+            if(time == 10){
+                //Clear current displayed word and input
+                entitiesList = clearDisplayWordEntity(entitiesList)
+                entitiesList = clearWordEntity(entitiesList)
+    
+                //boost monster ATK for word completed
+                entitiesList = getBonusATK(entitiesList, submitWord)
+    
+                //Put monsters available into attackQueue
+                attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
+                
+                changePhases("monster")
+            }
 
         }else if(phase == "monster"){
             //TODO
@@ -316,12 +331,12 @@ export default function (entities, args){
             let humanAttackQueue = entitiesList.filter(entity => {
                 return entity.status.type == "Human" && entity.status.isAlive == true
             })
-
+            
             for(let i=0; i<humanAttackQueue.length; i++){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 21
+                allMonster[randomPosition].status.Health -= 1
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
@@ -347,10 +362,10 @@ export default function (entities, args){
                 }
 
                 console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)
-                console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive)
+                console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive + " isRested: " + allMonster[randomPosition].status.rested)
             }
 
-            changePhases("alphabet")
+            changePhases("monster")
 
         }
         

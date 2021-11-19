@@ -152,6 +152,8 @@ export default function (entities, args) {
         }
       }
 
+      entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
+
       // display play's team
       monsterList.forEach((monster, index) => {
         if (index == 0) {
@@ -206,6 +208,10 @@ export default function (entities, args) {
       } else if (selected.type === "Monster") {
         money = buyingItem(money, price.monster, selected);
         console.log(money);
+      } else if (selected.type == "Button" && selected.button == "Confirm"){
+        Constants.stage = "Battle"
+        state1 = null
+        return {}
       }
     }
   }

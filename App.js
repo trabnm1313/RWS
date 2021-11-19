@@ -11,15 +11,11 @@ import loadingScreen from './assets/loadingScreen'
 // import {generator} from './assets/generator'
 
 //Systems
-// import GameLoop from './assets/systems/GameLoop'
-// import Menu from './assets/systems/Menu'
+import GameLoop from './assets/systems/GameLoop'
+import Menu from './assets/systems/Menu'
 import eventHandler from './assets/systems/eventHandler'
-// import { openDatabase, loadStatus } from './assets/systems/opendatabase'
-// import Loading from './assets/systems/Loading'
+import { openDatabase, loadStatus } from './assets/systems/opendatabase'
 import Shop from './assets/systems/Shop'
-
-//State
-let stage = "Battle"
 
 //Debugging
 LogBox.ignoreLogs(['Remote debugger']);
@@ -27,7 +23,7 @@ LogBox.ignoreLogs(['Remote debugger']);
 export default function App() {
   // const [stage, setStage] = React.useState("Battle")
   const engine = useRef(null)
-  // openDatabase()
+  openDatabase()
   
   // Mounting database
   useEffect(() => {
@@ -46,7 +42,7 @@ export default function App() {
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
       entities={loadingScreen(engine)}
-      systems={[Shop]}
+      systems={[GameLoop, Menu, Shop]}
       onEvent={eventHandler}>
       </GameEngine>
       <StatusBar style="auto" hidden/>

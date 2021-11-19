@@ -2,7 +2,6 @@ import _ from 'lodash'
 import entities from '../entities';
 
 let initialStat; // backup data
-let nowStat = []
 
 function DamageCalculator(attackerATK, TargetDEF) {
   return attackerATK - attackerATK * (TargetDEF / 100);
@@ -82,7 +81,6 @@ function ATKBoost(wordLength, BaseATK) {
 function getBonusATK(entitiesList, wordLength) {
   // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
   // nowStat = JSON.parse(JSON.stringify(entitiesList));
-  nowStat = _.cloneDeep(entitiesList)
 
   entitiesList.forEach((monster) => {
     if (monster.status.type == "Monster") {
@@ -95,16 +93,10 @@ function getBonusATK(entitiesList, wordLength) {
   return entitiesList;
 }
 
-function clearBooster(entitiesList) {
-  let newEntitiesList = entitiesList.filter(entity => { return entity.status.type != "Monster" })
-  let oldMonsterStats = nowStat.filter(entity => { return entity.status.type == "Monster" })
-  return [ ...newEntitiesList, ...oldMonsterStats ]
-}
 
 export {
   getNowStat,
   getBonusATK,
-  clearBooster
 }
 
 // Example
