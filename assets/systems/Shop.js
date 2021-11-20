@@ -3,7 +3,6 @@ import Constants from "../../Constants";
 import Entity from "../entities/index";
 import _ from 'lodash'
 
-
 // import { loadStatus } from "./opendatabase"
 
 let engine = null;
@@ -200,6 +199,7 @@ export default function (entities, args) {
 
       //
       entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
+      entitiesList.push(Entity.CostIndicator(engine, {x: 0, y: 0}, {width: 100, height: 30}, null, "Hello"))
     }
 
     // Event Handler

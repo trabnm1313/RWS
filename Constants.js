@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 import React from "react"
 
-let stage = "Shop"
+let stage = "Menu"
 let Level = 1
 let team = []
 let item = []
