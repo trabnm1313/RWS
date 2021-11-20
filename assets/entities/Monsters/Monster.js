@@ -12,8 +12,6 @@ const _Monster = (props) => {
     const entityName = (props.status.id).split(":")[0]
     const animation = React.useRef(null)
 
-    props.status["animation"] = animation
-
     const response = {
         name: "MONSTER_CLICKED",
         id: props.status.id,

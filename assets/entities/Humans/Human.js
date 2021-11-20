@@ -24,7 +24,7 @@ const _Human = (props) => {
         selectedColor = "yellow"
     }else selectedColor = "black"
 
-    const humanLoader = Humans("Soldier", animation)
+    const humanLoader = Humans(entityName, animation)
 
     //Loop Animation
     React.useEffect(() => {

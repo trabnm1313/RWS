@@ -6,7 +6,17 @@ import { Image } from 'react-native'
 import { loadStatus } from './systems/opendatabase'
 import * as MathFunction from './systems/MathFunctions'
 
-const CharacterList = []
+const CharacterList = [
+    "Archer",
+    "Assassin",
+    "Fisherman",
+    "Hero",
+    "Priest",
+    "SoldierM",
+    "SoldierR",
+    "Tank",
+    "Wizard"
+]
 const MonsterList = [
     "Bat",
     "BigGoblin",
@@ -86,8 +96,9 @@ const entitiesGenerator = (engine, words) => {
     // Right-side
     for(let i=0; i<3; i++){
         let newEntity = {} //Create empty object
+        let randomCharacter = Math.floor(Math.random() * CharacterList.length)
         for(let j=0; j<2; j++) {
-            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), "Soldier") //Assign key and entity to object
+            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.842+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
             entities["Human:"+i+''+j] = newEntity
         }
     }

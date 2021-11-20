@@ -131,8 +131,7 @@ export default function (entities, args){
         }
 
         //If there is more than 0 events occurs (object being touch and dispatch events, etc)
-        if(events.length > 0 && events[0].status != undefined){
-            
+        if(events.length > 0 && events[0].status != undefined){            
 
             //Selecting Phase
             if(phase == "monster"){
