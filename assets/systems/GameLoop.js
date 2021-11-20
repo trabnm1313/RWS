@@ -132,10 +132,7 @@ export default function (entities, args){
 
         //If there is more than 0 events occurs (object being touch and dispatch events, etc)
         if(events.length > 0 && events[0].status != undefined){
-            let whatSize = entitiesList.filter(entity => {return entity.status.type == "Monster"})
-            for(let i=0; i<whatSize.length; i++){
-                console.log(whatSize[i].status, "HUMAN")
-            }
+            
 
             //Selecting Phase
             if(phase == "monster"){

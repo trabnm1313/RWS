@@ -71,7 +71,8 @@ const entitiesGenerator = (engine, words) => {
     entities = {}
 
     if(Constants.team.length == 0){
-        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, "Ghost") //Assign key and entity to object
+        let randomMonster = Math.floor(Math.random() * MonsterList.length)
+        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster]) //Assign key and entity to object
         entities["Monster:0"] = newEntity
         Constants.team.push(_.cloneDeep(newEntity))
     }else{
