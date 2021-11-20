@@ -23,7 +23,7 @@ LogBox.ignoreLogs(['Remote debugger']);
 export default function App() {
   // const [stage, setStage] = React.useState("Battle")
   const engine = useRef(null)
-  openDatabase()
+  // openDatabase()
   
   // Mounting database
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function App() {
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
       entities={loadingScreen(engine)}
-      systems={[GameLoop, Menu, Shop]}
+      systems={[Shop]}
       onEvent={eventHandler}>
       </GameEngine>
       <StatusBar style="auto" hidden/>

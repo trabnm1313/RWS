@@ -1,15 +1,18 @@
 import { forEach, random } from "lodash";
 import Constants from "../../Constants";
 import Entity from "../entities/index";
+import _ from 'lodash'
+
+
 // import { loadStatus } from "./opendatabase"
 
 let engine = null;
 let state1 = null; // render state checker
 
 // from player
-let money = 1000; // player's money
-let pocket = []; // player's item
-let monsterList = []; // player's monster team
+let money = 100000; // player's money
+let pocket = _.cloneDeep(Constants.item); // player's item
+let monsterList = _.cloneDeep(Constants.team)
 
 // state in shop
 let itemInshop = []; // random item list
@@ -43,21 +46,21 @@ let allItem = [
 
 // Buy function
 // return LEFT MONEY
-function buyingItem(money, cost, item) {
+function buyingItem(money, cost, status) {
   let doHave = null; // checking state
   let isFull = null; // checking state
 
   // Can't have the same item in pocket
-  if (item.type == "Item") {
+  if (status.type == "Item") {
     doHave = pocket.map((element) => {
-      if (element.item == item.item) {
+      if (element.item == status.item) {
         return true;
       } else return false;
     });
 
     // is the pocket full
     isFull = pocket.length == itemFullLenght ? true : false;
-  } else if (item.type == "Monster") {
+  } else if (status.type == "Monster") {
     // monster can be the same
     doHave = [false];
     // is the Team full
@@ -74,10 +77,10 @@ function buyingItem(money, cost, item) {
     console.log("POCKET FULL");
     return money;
   } else {
-    if (item.type == "Item") {
-      pocket.push(item);
-    } else if (item.type == "Monster") {
-      monsterList.push(item);
+    if (status.type == "Item") {
+      pocket.push(Entity.Item(engine, {x: 0, y: 0}, {width: 100, height: 60}, status, status.id.split(":")[0]));
+    } else if (status.type == "Monster") {
+      monsterList.push(Entity.Monster(engine, {x: 0, y: 0}, {width: 100, height: 60}, status, status.id.split(":")[0])); // FIND A WAY TO SEND STATUS
     }
 
     state1 = null;
@@ -98,9 +101,10 @@ export default function (entities, args) {
   const events = args.events;
 
   let entitiesList = Object.values(entities);
-  if (engine == null) engine = entitiesList[0].engine;
+  if(engine == null) engine = entitiesList[0].engine
 
-  if(Constants.stage == "Shop"){
+  if(Constants.stage == "Shop") {
+
     // make it render just once time you want it run
     if (state1 === null) {
       console.log("rendered");
@@ -118,12 +122,12 @@ export default function (entities, args) {
       let xCounter = 230; // starter x
       let yCounter = 10; // starter y
 
-      // loop row
+      // loop row (for display item in shop)
       for (let i = 0; i < 3; i++) {
         xCounter = 230; // can be change
         yCounter += 65; // can be change
 
-        // loop display
+        // loop display item in shop
         for (let j = 0; j < 3; j++) {
           if (itemInshop[counter].type == "Item") {
             entitiesList.push(
@@ -152,48 +156,50 @@ export default function (entities, args) {
         }
       }
 
-      entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
-
-      // display play's team
+      // display player's team
       monsterList.forEach((monster, index) => {
         if (index == 0) {
-          entitiesList.push(
-            Entity.Monster(
-              engine,
-              { x: 0, y: 0 },
-              { width: 100, height: 60 },
-              monster
-            )
-          );
+          monster.pos.x = 100 // Change Position
+          monster.pos.y = 0
+          entitiesList.push(monster)
         } else if (index == 1) {
-          entitiesList.push(
-            Entity.Monster(
-              engine,
-              { x: 0, y: 65 },
-              { width: 100, height: 60 },
-              monster
-            )
-          );
+          monster.pos.x = 100 // Change Position
+          monster.pos.y = 35
+          entitiesList.push(monster)
         } else if (index == 2) {
-          entitiesList.push(
-            Entity.Monster(
-              engine,
-              { x: 0, y: 130 },
-              { width: 100, height: 60 },
-              monster
-            )
-          );
+          monster.pos.x = 100 // Change Position
+          monster.pos.y = 70
+          entitiesList.push(monster)
         } else if (index == 3) {
-          entitiesList.push(
-            Entity.Monster(
-              engine,
-              { x: 0, y: 195 },
-              { width: 100, height: 60 },
-              monster
-            )
-          );
+          monster.pos.x = 100 // Change Position
+          monster.pos.y = 135
+          entitiesList.push(monster)
         }
       });
+
+      // display player's item
+      pocket.forEach((item, index) => {
+        if (index == 0) {
+          item.pos.x = 400 // Change Position
+          item.pos.y = 0
+          entitiesList.push(item)
+        } else if (index == 1) {
+          item.pos.x = 500 // Change Position
+          item.pos.y = 0
+          entitiesList.push(item)
+        } else if (index == 2) {
+          item.pos.x = 600 // Change Position
+          item.pos.y = 0
+          entitiesList.push(item)
+        } else if (index == 3) {
+          item.pos.x = 700 // Change Position
+          item.pos.y = 0
+          entitiesList.push(item)
+        }
+      })
+
+      //
+      entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
     }
 
     // Event Handler
