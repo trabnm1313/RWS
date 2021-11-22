@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, NativeModules, Touchable, TouchableWithoutFeedback, Text, View, requireNativeComponent } from 'react-native'
 import Monsters from './Monsters'
+import DeadMonsters from "./DeadMonsters"
 
 let count = 0
 
@@ -11,6 +12,7 @@ const _Monster = (props) => {
     const yBody = props.pos.y
     const entityName = (props.status.id).split(":")[0]
     const animation = React.useRef(null)
+    const isAlive = props.status.isAlive
 
     const response = {
         name: "MONSTER_CLICKED",
@@ -30,12 +32,14 @@ const _Monster = (props) => {
         }
     }
 
-    const monsterLoader = Monsters(entityName, animation)
+    const monsterLoader = isAlive ? Monsters(entityName, animation) : DeadMonsters(entityName, animation)
 
     //Loop Animation
     React.useEffect(() => {
+        console.log("enter")
+        animation.current.reset()
         animation.current.play()
-    }, [])
+    }, [isAlive])
 
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>

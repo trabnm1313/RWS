@@ -87,6 +87,8 @@ const entitiesGenerator = (engine, words) => {
         let randomMonster = Math.floor(Math.random() * MonsterList.length)
         newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster]) //Assign key and entity to object
         entities["Monster:0"] = newEntity
+        entities["Monster:1"] = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE*2), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster])
+        entities["Monster:3"] = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE*3), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster])
         Constants.team.push(_.cloneDeep(newEntity))
     }else{
         for(i=0; i<Constants.team.length; i++){

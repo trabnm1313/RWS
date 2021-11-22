@@ -86,6 +86,9 @@ function changePhases(toPhase){
 
     }else if(toPhase == "monster"){
 
+        //Put monsters available into attackQueue
+        attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
+        
         phase = "monster"
 
     }else if(toPhase == "human"){
@@ -130,8 +133,9 @@ export default function (entities, args){
             return {}
         }
 
+
         //If there is more than 0 events occurs (object being touch and dispatch events, etc)
-        if(events.length > 0 && events[0].status != undefined){            
+        if(events.length > 0 && events[0].status != undefined){      
 
             //Selecting Phase
             if(phase == "monster"){
@@ -154,7 +158,7 @@ export default function (entities, args){
                     monsterSelected.status.selected = true
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    humanSelected.status.Health -= 200
+                    humanSelected.status.Health -= 10
 
                     //Change if the attacked human is dead yet
                     if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
@@ -250,12 +254,9 @@ export default function (entities, args){
 
                     let founded = findWord(currentWord)
 
-                    console.log(founded)
                     if(founded == 0){
-                        console.log("Not founded")
                         entitiesList = entitiesList.filter(entity => {return entity.status.button != "Confirm"})
                     } else if(entitiesList.filter(entity => {return entity.status.button == "Confirm"}).length == 0){
-                        console.log("Founded and add once")
                         entitiesList.push(Entity.Button(engine, {x: 100, y: 200}, {width: 100, height: 30}, null, "Confirm"))
                     }
                     
@@ -325,9 +326,6 @@ export default function (entities, args){
     
                 //boost monster ATK for word completed
                 entitiesList = getBonusATK(entitiesList, submitWord)
-    
-                //Put monsters available into attackQueue
-                attackQueue = entitiesList.filter(entity => { return entity.status.type == "Monster" && entity.status.isAlive == true })
                 
                 changePhases("monster")
             }
@@ -347,7 +345,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 1
+                allMonster[randomPosition].status.Health -= 40
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
