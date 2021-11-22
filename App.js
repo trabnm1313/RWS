@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useRef } from 'react'
 import { StyleSheet, Text, View , TouchableOpacity, LogBox, Platform, Dimensions, Image } from 'react-native'
+import LottieView from 'lottie-react-native'
 import { GameEngine } from 'react-native-game-engine'
 import * as ScreenOrientation from "expo-screen-orientation"
 
@@ -16,6 +17,7 @@ import Menu from './assets/systems/Menu'
 import eventHandler from './assets/systems/eventHandler'
 import { openDatabase, loadStatus } from './assets/systems/opendatabase'
 import Shop from './assets/systems/Shop'
+import Constants from './Constants'
 
 //Debugging
 LogBox.ignoreLogs(['Remote debugger']);
@@ -24,20 +26,17 @@ export default function App() {
   // const [stage, setStage] = React.useState("Battle")
   const engine = useRef(null)
   openDatabase()
-  
-  // Mounting database
-  useEffect(() => {
-    changeScreenOrientation()
+
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).then(() => {
+    if(Constants.MAX_HEIGHT > Constants.MAX_WIDTH){
+      let temp = Constants.MAX_HEIGHT
+      Constants.MAX_HEIGHT = Constants.MAX_WIDTH
+      Constants.MAX_WIDTH = temp
+    }
   })
-  
-  // screen orient
-  async function changeScreenOrientation() {
-    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-  }
 
   return (
     <View style={styles.container}>
-      <Image style={{left:0, top:0, width: "100%", height: "100%", position: 'absolute'}} source={require("./assets/images/Battlefield2.png")}/>
       <GameEngine
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}

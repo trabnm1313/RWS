@@ -80,6 +80,9 @@ const entitiesGenerator = (engine, words) => {
 
     entities = {}
 
+    //Background Image
+    entities["Background"] = Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle")
+
     if(Constants.team.length == 0){
         let randomMonster = Math.floor(Math.random() * MonsterList.length)
         newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster]) //Assign key and entity to object
