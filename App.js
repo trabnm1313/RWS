@@ -16,7 +16,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+<<<<<<< Updated upstream
       <Something value="HelloWorld"/>
+=======
+      <Image style={{left:0, top:-110, width: "100%", height: "150%", position: 'absolute'}} source={require("./assets/images/Battlefield2.png")}/>
+>>>>>>> Stashed changes
       <GameEngine
       ref={engine}
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
