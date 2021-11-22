@@ -34,14 +34,15 @@ async function openDatabase(){
   if ( !directoryInfo.exists ){
     await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + "SQLite").then(()=>console.log("Created SQLite directory.")).catch(err=>console.log(err))
 
-    //If there is no directory mean that there is no database either, so create one
-    const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
-    await FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionary.db").then(() => {
-      console.log("Database loaded.")
-      parseData()
-    }).catch(()=>console.log(err))
+    if(!databaseInfo.exists){
+      const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
+      FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionary.db").then(() => {
+        console.log("Database loaded.")
+        setTimeout(()=>{ parseData() }, 5000) 
+      }).catch(()=>console.log(err))
+    }
   }else{
-    parseData()
+    setTimeout(()=>{ parseData() }, 5000) 
   }
 }
 
