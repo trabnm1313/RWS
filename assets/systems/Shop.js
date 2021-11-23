@@ -28,11 +28,55 @@ const allItem = [
   },
   {
     type: "Monster",
+    value: "BigGoblin",
+  },
+  {
+    type: "Monster",
+    value: "Devil",
+  },
+  {
+    type: "Monster",
     value: "Ghost",
   },
   {
     type: "Monster",
     value: "Goblin",
+  },
+  {
+    type: "Monster",
+    value: "SkeletonB",
+  },
+  {
+    type: "Monster",
+    value: "SkeletonS",
+  },
+  {
+    type: "Monster",
+    value: "SlimeB",
+  },
+  {
+    type: "Monster",
+    value: "SlimeG",
+  },
+  {
+    type: "Monster",
+    value: "SlimeR",
+  },
+  {
+    type: "Monster",
+    value: "SlimeP",
+  },
+  {
+    type: "Monster",
+    value: "Vampire",
+  },
+  {
+    type: "Monster",
+    value: "Witch",
+  },
+  {
+    type: "Monster",
+    value: "Zombie",
   },
   {
     type: "Item",
@@ -167,10 +211,10 @@ export default function (entities, args) {
         // position of shop item that displayed
         let counter = 0; // position in itemInshop array
         let xCounter = 260; // starter x
-        let yCounter = -50; // starter y
+        let yCounter = -30; // starter y
 
         //Background Image
-        entitiesList.push(Entity.Background({x: 0, y: 0}, {width: "120%", height: "100%"}, null, "Shop"))
+        entitiesList.push(Entity.Background({x: 0, y: 0}, {width: "100%", height: "100%"}, null, "Shop"))
 
         // loop row (for display item in shop)
         for (let i = 0; i < 3; i++) {
