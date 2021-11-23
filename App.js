@@ -26,12 +26,9 @@ export default function App() {
   const engine = useRef(null)
   openDatabase()
 
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).then(() => {
-    if(Constants.MAX_HEIGHT > Constants.MAX_WIDTH){
-      let temp = Constants.MAX_HEIGHT
-      Constants.MAX_HEIGHT = Constants.MAX_WIDTH
-      Constants.MAX_WIDTH = temp
-    }
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).then((what) => {
+    Constants.MAX_WIDTH = Dimensions.get('screen').width - 100
+    Constants.MAX_HEIGHT = Dimensions.get('screen').height
   })
 
   return (

@@ -56,9 +56,7 @@ function clearWordEntity(entitiesList){
     let newEntitiesList = entitiesList.filter(entity => {
         if(entity.status.type == "Alphabet" || entity.status.button == "Confirm"){
             return false
-        }else if(entity.status.type == "Timer"){
-            return false
-        } else return true
+        }else return true
     })
     return newEntitiesList
 }
@@ -287,6 +285,7 @@ export default function (entities, args){
                             return entity.status.type != "Alphabet"
                         })
 
+                        generateWord()
                         submitWord.push(currentWord)
                         
                         //Check and apply buffs to current team members
@@ -331,10 +330,13 @@ export default function (entities, args){
     
             }
 
-            if(time == 0){
+            if(time == -1){
                 //Clear current displayed word and input
                 entitiesList = clearDisplayWordEntity(entitiesList)
                 entitiesList = clearWordEntity(entitiesList)
+
+                //Remove timer
+                entitiesList = entitiesList.filter(entity => { return entity.status.type != "Timer" })
     
                 //boost monster ATK for word completed
                 entitiesList = getBonusATK(entitiesList, submitWord)
