@@ -79,8 +79,6 @@ function ATKBoost(wordLength, BaseATK) {
 }
 
 function getBonusATK(entitiesList, wordLength) {
-  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
-  // nowStat = JSON.parse(JSON.stringify(entitiesList));
 
   entitiesList.forEach((monster) => {
     if (monster.status.type == "Monster") {
@@ -92,7 +90,6 @@ function getBonusATK(entitiesList, wordLength) {
 
   return entitiesList;
 }
-
 
 export {
   getNowStat,

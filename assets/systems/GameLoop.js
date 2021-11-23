@@ -387,7 +387,6 @@ export default function (entities, args){
         }
         
     }
-    
 
     //Assign value to entities from array to object
     entities = { ...entitiesList }
