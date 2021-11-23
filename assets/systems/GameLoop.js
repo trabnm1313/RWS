@@ -18,6 +18,9 @@ let x = true
 let initialGenerate = true
 let engine = null
 
+//Configuration
+const ALPHABET_TIME = 30 + 1
+
 //Selected Entity
 let humanSelected = "", monsterSelected = ""
 
@@ -26,7 +29,7 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
-let time = 0, timer = null, timerText = null
+let time = ALPHABET_TIME, timer = null, timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
 
@@ -52,6 +55,8 @@ function wordEntityGenerator(entitiesList){
 function clearWordEntity(entitiesList){
     let newEntitiesList = entitiesList.filter(entity => {
         if(entity.status.type == "Alphabet" || entity.status.button == "Confirm"){
+            return false
+        }else if(entity.status.type == "Timer"){
             return false
         } else return true
     })
@@ -83,7 +88,7 @@ function changePhases(toPhase){
 
         wordEntityGenerator(entitiesList)
         submitWord = []
-        time = 0
+        time = ALPHABET_TIME
 
     }else if(toPhase == "monster"){
 
@@ -129,14 +134,14 @@ export default function (entities, args){
         if(initialGenerate && words.length > 1){
             entitiesList = []
             initialGenerate = false
-            time = 1
             timer = setInterval(() => {
-                timerText = entitiesList.filter(entity => { return entity.status.type == "Timer"})[0]
                 if(timerText != undefined) timerText.status.text = time
-                time += 1
+                time -= 1
             }, 1000)
             generateWord()
-            return entitiesGenerator(engine, words, Constants.Level)
+            let returnEntities = entitiesGenerator(engine, words, Constants.Level)
+            timerText = returnEntities.Timer
+            return returnEntities
         }else if(initialGenerate){
             return {}
         }
@@ -201,7 +206,7 @@ export default function (entities, args){
                         Constants.Level += 1
                         Constants.stage = "Shop"
                         initialGenerate = true
-                        time = 0
+                        time = ALPHABET_TIME
                         clearInterval(timer)
                         return {}
 
@@ -326,7 +331,7 @@ export default function (entities, args){
     
             }
 
-            if(time == 10){
+            if(time == 0){
                 //Clear current displayed word and input
                 entitiesList = clearDisplayWordEntity(entitiesList)
                 entitiesList = clearWordEntity(entitiesList)
@@ -371,7 +376,7 @@ export default function (entities, args){
                     entitiesList = []
                     Constants.stage = "Menu"
                     initialGenerate = true
-                    time = 0    
+                    time = ALPHABET_TIME
                     clearInterval(timer)
                     return {}
 
