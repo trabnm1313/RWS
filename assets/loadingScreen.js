@@ -1,10 +1,12 @@
 import React from 'react'
 import { Text, Image } from 'react-native'
 import Entity from './entities/index'
+import Constants from "../Constants"
 
 let entities = {}
 
 export default function(engine) {
+    Constants.engine = engine
 
     return {
         Engine: { engine: engine },

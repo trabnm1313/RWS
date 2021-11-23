@@ -12,7 +12,6 @@ import findWord from './findWord'
 import { Data, loadStatus } from '../systems/opendatabase'
 
 import _ from 'lodash'
-import entities from '../entities/index'
 
 let x = true
 
@@ -35,8 +34,8 @@ const SIZE = Constants.MAX_WIDTH*0.073891
 const SIZE_ITEM = Constants.MAX_WIDTH*0.061576
 const SIZE_BUTTON = Constants.MAX_WIDTH*0.067
 
-async function generateWord(){
-    words = await genWord()
+function generateWord(){
+    words = genWord()
 }
 
 function wordEntityGenerator(entitiesList){
@@ -108,7 +107,7 @@ export default function (entities, args){
     const events = args.events
 
     entitiesList = Object.values(entities)
-    if(engine == null && loadStatus != true) engine = entitiesList[0].engine
+    if(engine == null) engine = Constants.engine
 
     //Pre-Generate Words
     // if(words.length == 0){

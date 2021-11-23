@@ -10,7 +10,7 @@ export default (text) => {
   // capitalize the first letter to match the word in database
   let word = txt.charAt(0).toUpperCase() + txt.slice(1)
 
-  return Data.rows._array.filter(wordInData => { return wordInData.word == word }).length
+  return Data.filter(wordInData => { return wordInData.word == word }).length
   
   // //Making promise
   // return new Promise((resolve, reject) => {
