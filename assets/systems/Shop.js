@@ -170,7 +170,7 @@ export default function (entities, args) {
         let yCounter = -50; // starter y
 
         //Background Image
-        entitiesList.push(Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle"))
+        entitiesList.push(Entity.Background({x: 0, y: 0}, {width: "120%", height: "100%"}, null, "Shop"))
 
         // loop row (for display item in shop)
         for (let i = 0; i < 3; i++) {

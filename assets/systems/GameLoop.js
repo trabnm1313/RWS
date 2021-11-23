@@ -19,7 +19,7 @@ let initialGenerate = true
 let engine = null
 
 //Configuration
-const ALPHABET_TIME = 1 + 1
+const ALPHABET_TIME = 30 + 1
 
 //Selected Entity
 let humanSelected = "", monsterSelected = ""

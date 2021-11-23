@@ -84,8 +84,6 @@ const entitiesGenerator = (engine, words) => {
     SIZE_ITEM = Constants.MAX_WIDTH*0.061576
     SIZE_BUTTON = Constants.MAX_WIDTH*0.067
 
-    console.log(Constants.MAX_HEIGHT, Constants.MAX_WIDTH)
-
     let row = 0
     let rowItem = 0
     entities = {}
@@ -94,7 +92,7 @@ const entitiesGenerator = (engine, words) => {
     entities["Background"] = Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle")
 
     //Timer
-    entities["Timer"] = Entity.Label({x: 650, y:250}, {width: 80, height: 30}, null, "Timer", "NaN")
+    entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "NaN")
 
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object
@@ -116,18 +114,14 @@ const entitiesGenerator = (engine, words) => {
 
 
     // Right-side
-    let newEntity = {} //Create empty object
+    for(let i=0; i<3; i++){
+        for(let j=0; j<2; j++) {
+            let newEntity = {} //Create empty object
             let randomCharacter = Math.floor(Math.random() * CharacterList.length)
-            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.75+(0*SIZE), y: Constants.MAX_HEIGHT*0.02+(0*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
-            entities["Human:"] = newEntity
-    // for(let i=0; i<3; i++){
-    //     for(let j=0; j<2; j++) {
-    //         let newEntity = {} //Create empty object
-    //         let randomCharacter = Math.floor(Math.random() * CharacterList.length)
-    //         newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.75+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
-    //         entities["Human:"+i+''+j] = newEntity
-    //     }
-    // }
+            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.75+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
+            entities["Human:"+i+''+j] = newEntity
+        }
+    }
 
     // Items
     for(let i=1; i <= Constants.item.length; i++){
@@ -141,7 +135,7 @@ const entitiesGenerator = (engine, words) => {
 
     for(let i=0; i<3; i++){
         for(let j=0; j<6; j++) {
-            entities["Alphabet:" + i + j] = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.30+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j])  //Assign key and entity to object
+            entities["Alphabet:" + i + j] = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.28+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j])  //Assign key and entity to object
         }
     }
     
