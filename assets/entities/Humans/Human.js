@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, NativeModules, Touchable, TouchableWithoutFeedback, Text, View, requireNativeComponent } from 'react-native'
 import Humans from './Humans'
+import DeadHumans from './DeadHumans'
 
 let count = 0
 
@@ -11,6 +12,7 @@ const _Human = (props) => {
     const yBody = props.pos.y
     const entityName = (props.status.id).split(":")[0]
     const animation = React.useRef(null)
+    const isAlive = props.status.isAlive
 
     const response = {
         name: "SOLDIER_CLICKED",
@@ -24,12 +26,13 @@ const _Human = (props) => {
         selectedColor = "yellow"
     }else selectedColor = "black"
 
-    const humanLoader = Humans(entityName, animation)
+    const humanLoader = isAlive ? Humans(entityName, animation) : DeadHumans(entityName, animation)
 
     //Loop Animation
     React.useEffect(() => {
+        animation.current.reset()
         animation.current.play()
-    }, [])
+    }, [isAlive])
 
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>

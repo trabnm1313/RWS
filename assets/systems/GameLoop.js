@@ -158,7 +158,7 @@ export default function (entities, args){
                     monsterSelected.status.selected = true
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    humanSelected.status.Health -= 10
+                    humanSelected.status.Health -= 200
 
                     //Change if the attacked human is dead yet
                     if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
@@ -345,7 +345,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 40
+                allMonster[randomPosition].status.Health -= 10
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
