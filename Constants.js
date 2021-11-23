@@ -3,6 +3,7 @@ import React from "react"
 
 let stage = "Menu"
 let Level = 1
+let money = 1000
 let team = []
 let item = []
 
@@ -12,5 +13,6 @@ export default {
     stage,
     Level,
     team,
-    item
+    item,
+    money
 }
