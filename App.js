@@ -14,7 +14,6 @@ import loadingScreen from './assets/loadingScreen'
 //Systems
 import GameLoop from './assets/systems/GameLoop'
 import Menu from './assets/systems/Menu'
-import eventHandler from './assets/systems/eventHandler'
 import { openDatabase, loadStatus } from './assets/systems/opendatabase'
 import Shop from './assets/systems/Shop'
 import Constants from './Constants'
@@ -42,8 +41,7 @@ export default function App() {
       style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
       entities={loadingScreen(engine)}
       systems={[GameLoop, Menu, Shop]}
-      onEvent={eventHandler}>
-      </GameEngine>
+      ></GameEngine>
       <StatusBar style="auto" hidden/>
     </View>
   )
