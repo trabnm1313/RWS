@@ -4,6 +4,7 @@ import { loadStatus } from "./opendatabase"
 import { Dimensions } from "react-native";
 
 let engine = null
+let initial = true
 
 export default function(entities, args){
     const events = args.events
@@ -15,7 +16,8 @@ export default function(entities, args){
     if(Constants.stage != "Menu") return entities
 
 
-    if(loadStatus){
+    if(loadStatus && initial){
+        initial = false
         entitiesList.push(Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Menu"))        
         entitiesList.push(Entity.Button(engine, {x: "43%", y: "75%"}, {width: 150, height: 80}, null, "Start"))
     }

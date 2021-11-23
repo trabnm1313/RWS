@@ -33,9 +33,7 @@ let time = ALPHABET_TIME, timer = null, timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
 
-const SIZE = Constants.MAX_WIDTH*0.073891
-const SIZE_ITEM = Constants.MAX_WIDTH*0.061576
-const SIZE_BUTTON = Constants.MAX_WIDTH*0.067
+let SIZE, SIZE_BUTTON, SIZE_ITEM
 
 function generateWord(){
     words = genWord()
@@ -131,6 +129,15 @@ export default function (entities, args){
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
             entitiesList = []
+            if(Constants.MAX_HEIGHT > Constants.MAX_WIDTH){
+                let temp = Constants.MAX_HEIGHT
+                Constants.MAX_HEIGHT = Constants.MAX_WIDTH
+                Constants.MAX_WIDTH = temp
+            }
+            SIZE = Constants.MAX_WIDTH*0.073891
+            SIZE_ITEM = Constants.MAX_WIDTH*0.061576
+            SIZE_BUTTON = Constants.MAX_WIDTH*0.067
+            time = ALPHABET_TIME
             initialGenerate = false
             timer = setInterval(() => {
                 if(timerText != undefined) timerText.status.text = time
@@ -243,6 +250,9 @@ export default function (entities, args){
                             return entity
                         })
                     }
+                    
+                    //Removed used item from Constants
+                    Constants.item = Constants.item.filter(item => { return item.status.id != events["0"].status.id})
 
                     //remove used item
                     entitiesList = entitiesList.filter(entity => {return entity.status.id != events["0"].status.id})
