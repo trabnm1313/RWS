@@ -11,7 +11,7 @@ let state2 = null; // render state checker
 
 let monsterList = []; // player's team
 let pocket = []; // player's item
-let money = 100000; // player's money (MOCKING)
+let money = 0; // player's money
 
 // state in shop
 let itemInshop = []; // random item list
@@ -46,7 +46,7 @@ const price = {
 
 // Buy function
 // return LEFT MONEY
-function buyingItem(money, cost, status) {
+function buyingItem(money, cost, status, entityList) {
   let doHave = null; // checking state
   let isFull = null; // checking state
 
@@ -69,15 +69,18 @@ function buyingItem(money, cost, status) {
 
   if (money < cost) {
     console.log("NOT ENOUGH MONEY");
-    return money;
+    return { money: money, entity: entityList };
   } else if (doHave.includes(true)) {
     console.log("SAME");
-    return money;
+    return { money: money, entity: entityList };
   } else if (isFull) {
     console.log("POCKET FULL");
-    return money;
+    return { money: money, entity: entityList };
   } else {
     if (status.type == "Item") {
+      entityList = entityList.filter((entity) => {
+        return entity.status.id != status.id;
+      });
       pocket.push(
         Entity.Item(
           engine,
@@ -88,6 +91,9 @@ function buyingItem(money, cost, status) {
         )
       );
     } else if (status.type == "Monster") {
+      entityList = entityList.filter((entity) => {
+        return entity.status.id != status.id;
+      });
       monsterList.push(
         Entity.Monster(
           engine,
@@ -100,7 +106,7 @@ function buyingItem(money, cost, status) {
     }
 
     state1 = null;
-    return money - cost;
+    return { money: money - cost, entity: entityList };
   }
 }
 
@@ -126,14 +132,12 @@ export default function (entities, args) {
       if (state2 === null) {
         monsterList = _.cloneDeep(Constants.team); // player's team
         pocket = _.cloneDeep(Constants.item); // player's item
+        money = Constants.money;
       }
-
-      console.log("rendered");
       state1 = "yes"; // checked state
 
       // the ramdom statement
       if (wannaRandom == true) {
-        console.log("random");
         randomItem();
         wannaRandom = false;
       }
@@ -182,7 +186,6 @@ export default function (entities, args) {
       }
 
       // display player's team
-      console.log(monsterList.length);
       monsterList.forEach((monster, index) => {
         if (index == 0) {
           monster.pos.x = 100; // Change Position
@@ -206,23 +209,23 @@ export default function (entities, args) {
       // display player's item
       pocket.forEach((item, index) => {
         if (index == 0) {
-          item.pos.x = 400 // Change Position
-          item.pos.y = 0
-          entitiesList.push(item)
+          item.pos.x = 400; // Change Position
+          item.pos.y = 0;
+          entitiesList.push(item);
         } else if (index == 1) {
-          item.pos.x = 500 // Change Position
-          item.pos.y = 0
-          entitiesList.push(item)
+          item.pos.x = 500; // Change Position
+          item.pos.y = 0;
+          entitiesList.push(item);
         } else if (index == 2) {
-          item.pos.x = 600 // Change Position
-          item.pos.y = 0
-          entitiesList.push(item)
+          item.pos.x = 600; // Change Position
+          item.pos.y = 0;
+          entitiesList.push(item);
         } else if (index == 3) {
-          item.pos.x = 700 // Change Position
-          item.pos.y = 0
-          entitiesList.push(item)
+          item.pos.x = 700; // Change Position
+          item.pos.y = 0;
+          entitiesList.push(item);
         }
-      })
+      });
 
       //
       entitiesList.push(
@@ -242,9 +245,32 @@ export default function (entities, args) {
       let selected = events["0"].status;
 
       if (selected.type == "Item") {
-        if (selected.item === "HP_POTION") {
-          money = buyingItem(money, price.potion, selected);
-          console.log(money);
+        let inTeamAt = -1; // checking statement
+        pocket.map((item, index) => {
+          if (item.status.id.localeCompare(selected.id) == 0) {
+            inTeamAt = index;
+            return index;
+          }
+        }); // return index or undefined
+
+        if (inTeamAt != -1) {
+          pocket.splice(inTeamAt, 1);
+          entitiesList = entitiesList.filter((entity) => {
+            return entity.status.id != selected.id;
+          });
+          inTeamAt = -1;
+          state1 = null; // re-render
+        } else {
+          if (selected.item === "HP_POTION") {
+            let callback = buyingItem(
+              money,
+              price.potion,
+              selected,
+              entitiesList
+            );
+            money = callback.money;
+            entitiesList = callback.entity;
+          }
         }
       } else if (selected.type === "Monster") {
         let inTeamAt = -1; // checking statement
@@ -254,24 +280,34 @@ export default function (entities, args) {
             return index;
           }
         }); // return index or undefined
-        console.log(inTeamAt);
         //!(inTeamAt.every((element) => element == -1))
         if (inTeamAt != -1) {
-          console.log("IN TEAM => ", inTeamAt);
-          monsterList.splice(inTeamAt, 1)
-          money += 0.7 * price.monster // selling monster give ur moneyback 70%
-          inTeamAt = -1
+          monsterList.splice(inTeamAt, 1);
+          money += 0.7 * price.monster; // selling monster give ur moneyback 70%
+          entitiesList = entitiesList.filter((entity) => {
+            return entity.status.id != selected.id;
+          });
+          inTeamAt = -1;
           state1 = null; // re-render
         } else {
-          money = buyingItem(money, price.monster, selected);
-          console.log(money);
+          let callback = buyingItem(
+            money,
+            price.monster,
+            selected,
+            entitiesList
+          );
+          money = callback.money;
+          entitiesList = callback.entity;
         }
       } else if (selected.type == "Button" && selected.button == "Confirm") {
         Constants.stage = "Battle";
         Constants.team = _.cloneDeep(monsterList);
+        Constants.item = _.cloneDeep(pocket);
         state1 = null;
+        state2 = null;
         return {};
       }
+      console.log(money);
     }
   }
 
