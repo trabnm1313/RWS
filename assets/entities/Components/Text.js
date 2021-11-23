@@ -12,7 +12,7 @@ const _Label = (props) => {
     const text = props.status.text
 
     return(
-        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1}}>
+        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody}}>
             <Text style={{fontSize: 16, fontWeight: 'bold', color: "white"}}>Time: {text}</Text>
         </View>
     )

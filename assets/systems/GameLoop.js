@@ -330,7 +330,7 @@ export default function (entities, args){
     
             }
 
-            if(time == -1){
+            if(time <= -1){
                 //Clear current displayed word and input
                 entitiesList = clearDisplayWordEntity(entitiesList)
                 entitiesList = clearWordEntity(entitiesList)

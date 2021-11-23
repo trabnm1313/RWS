@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useRef } from 'react'
-import { StyleSheet, Text, View , TouchableOpacity, LogBox, Platform, Dimensions, Image } from 'react-native'
+import { StyleSheet, View, LogBox, Dimensions } from 'react-native'
 import LottieView from 'lottie-react-native'
 import { GameEngine } from 'react-native-game-engine'
 import * as ScreenOrientation from "expo-screen-orientation"
@@ -26,10 +26,8 @@ export default function App() {
   const engine = useRef(null)
   openDatabase()
 
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).then((what) => {
-    Constants.MAX_WIDTH = Dimensions.get('screen').width - 100
-    Constants.MAX_HEIGHT = Dimensions.get('screen').height
-  })
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE)
+  
 
   return (
     <View style={styles.container}>

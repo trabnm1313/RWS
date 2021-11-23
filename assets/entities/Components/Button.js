@@ -25,7 +25,7 @@ const _Button = (props) => {
     const buttonLoader = Buttons(props.status.button)
 
     return(
-        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody, borderWidth: 1, borderColor: selectedColor}}>
+        <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody}}>
             <TouchableWithoutFeedback onPress={() => props.engine.current.dispatch(response)}>
                 {buttonLoader}
             </TouchableWithoutFeedback>
