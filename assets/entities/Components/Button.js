@@ -4,10 +4,6 @@ import Buttons from './Buttons'
 
 let count = 0
 
-const voiceLine = [
-    "..."
-]
-
 const _Button = (props) => {
     const bodyWidth = props.size.width
     const bodyHeight = props.size.height

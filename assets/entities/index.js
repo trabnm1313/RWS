@@ -13,6 +13,7 @@ import { Item }from "./Items/Item"
 //Components
 import { Button } from "./Components/Button"
 import { Background } from "./Components/Background"
+import { Label } from "./Components/Text"
 
 export default {
     Human,
@@ -20,5 +21,6 @@ export default {
     Alphabet,
     Item,
     Button,
-    Background
+    Background,
+    Label
 }

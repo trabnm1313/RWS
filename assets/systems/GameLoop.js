@@ -25,7 +25,7 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
-let time = 0, timer = null
+let time = 0, timer = null, timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
 
@@ -124,6 +124,8 @@ export default function (entities, args){
             entitiesList = []
             initialGenerate = false
             timer = setInterval(() => {
+                timerText = entitiesList.filter(entity => { return entity.status.type == "Timer"})[0]
+                if(timerText != undefined) timerText.status.text = time
                 time += 1
                 console.log(time)
             }, 1000)
