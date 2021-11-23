@@ -77,6 +77,7 @@ const entitiesGenerator = (engine, words) => {
     let SIZE = Constants.MAX_WIDTH*0.073891
     let SIZE_ITEM = Constants.MAX_WIDTH*0.061576
     let SIZE_BUTTON = Constants.MAX_WIDTH*0.067
+    let row = 0
 
     entities = {}
 
@@ -87,16 +88,18 @@ const entitiesGenerator = (engine, words) => {
     entities["Timer"] = Entity.Label({x: 650, y:250}, {width: 80, height: 30}, null, "Timer", "NaN")
 
     if(Constants.team.length == 0){
-        let randomMonster = Math.floor(Math.random() * MonsterList.length)
-        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster]) //Assign key and entity to object
-        entities["Monster:0"] = newEntity
-        entities["Monster:1"] = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE*2), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster])
-        entities["Monster:3"] = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE*3), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomMonster])
-        Constants.team.push(_.cloneDeep(newEntity))
-    }else{
-        for(i=0; i<Constants.team.length; i++){
-            console.log(">>> ", Constants.team.length)
-            entities[Constants.team[i].status.id] = _.cloneDeep(Constants.team[i])
+        let newEntity = {} //Create empty object
+        let randomCharacter = Math.floor(Math.random() * MonsterList.length)
+        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), MonsterList[randomCharacter]) //Assign key and entity to object
+        entities["Monster:"+i+''+j] = newEntity
+        Constants.team.push(newEntity)
+    }
+    else{
+        for(let i = 1; i <= Constants.team.length; i++){
+            if(i%2 == 1) row++
+            Constants.team[i-1].pos.x = Constants.MAX_WIDTH*0.01+(SIZE*(i%2+1))
+            Constants.team[i-1].pos.y = Constants.MAX_HEIGHT*0.02+(SIZE*(row-1))
+            entities[Constants.team[i-1].status.id] = _.cloneDeep(Constants.team[i-1])
         }
     }
 
