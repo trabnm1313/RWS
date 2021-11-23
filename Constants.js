@@ -9,7 +9,7 @@ let item = []
 let engine = null
 
 export default {
-    MAX_WIDTH: Dimensions.get("screen").width - 100,
+    MAX_WIDTH: Dimensions.get("screen").width,
     MAX_HEIGHT: Dimensions.get("screen").height,
     engine,
     stage,

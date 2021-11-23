@@ -19,7 +19,7 @@ let initialGenerate = true
 let engine = null
 
 //Configuration
-const ALPHABET_TIME = 30 + 1
+const ALPHABET_TIME = 1 + 1
 
 //Selected Entity
 let humanSelected = "", monsterSelected = ""
@@ -330,7 +330,7 @@ export default function (entities, args){
     
             }
 
-            if(time == -1){
+            if(time <= -1){
                 //Clear current displayed word and input
                 entitiesList = clearDisplayWordEntity(entitiesList)
                 entitiesList = clearWordEntity(entitiesList)

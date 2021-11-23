@@ -30,7 +30,7 @@ const _Human = (props) => {
 
     //Loop Animation
     React.useEffect(() => {
-        animation.current.reset()
+        // animation.current.reset()
         animation.current.play()
     }, [isAlive])
 

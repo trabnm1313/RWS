@@ -38,6 +38,18 @@ const allItem = [
     type: "Item",
     value: "HP_POTION",
   },
+  {
+    type: "Item",
+    value: "Attack_POTION",
+  },
+  {
+    type: "Item",
+    value: "Defense_POTION",
+  },
+  {
+    type: "Item",
+    value: "Dynamite",
+  },
 ];
 
 const price = {
@@ -128,7 +140,7 @@ export default function (entities, args) {
   const events = args.events;
 
   entitiesList = Object.values(entities);
-  if (engine == null) engine = entitiesList[0].engine;
+  if (engine == null) engine = Constants.engine;
 
   if (Constants.stage == "Shop") {
     // make it render just once time you want it run
@@ -154,15 +166,15 @@ export default function (entities, args) {
         state2 = "yes";
         // position of shop item that displayed
         let counter = 0; // position in itemInshop array
-        let xCounter = 230; // starter x
-        let yCounter = 10; // starter y
+        let xCounter = 260; // starter x
+        let yCounter = -50; // starter y
 
         //Background Image
         entitiesList.push(Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle"))
 
         // loop row (for display item in shop)
         for (let i = 0; i < 3; i++) {
-          xCounter = 230; // can be change
+          xCounter = 260; // can be change
           yCounter += 65; // can be change
 
           // loop display item in shop
@@ -172,7 +184,7 @@ export default function (entities, args) {
                 Entity.Item(
                   engine,
                   { x: xCounter, y: yCounter },
-                  { width: 100, height: 60 },
+                  { width: SIZE, height: SIZE },
                   null,
                   itemInshop[counter].value // MUST BE CHANGE
                 )
@@ -182,14 +194,14 @@ export default function (entities, args) {
                 Entity.Monster(
                   engine,
                   { x: xCounter, y: yCounter },
-                  { width: 100, height: 60 },
+                  { width: SIZE, height: SIZE },
                   null,
                   itemInshop[counter].value // MUST BE CHANGE
                 )
               );
             }
 
-            xCounter += 110;
+            xCounter += 100;
             counter++;
           }
         }
@@ -200,41 +212,43 @@ export default function (entities, args) {
         monster.size.width = SIZE
         monster.size.height = SIZE
         if (index == 0) {
-          monster.pos.x = 100; // Change Position
-          monster.pos.y = 0;
+          monster.pos.x = "10%"; // Change Position
+          monster.pos.y = "10%";
           entitiesList.push(monster);
         } else if (index == 1) {
-          monster.pos.x = 100; // Change Position
-          monster.pos.y = 35;
+          monster.pos.x = "10%"; // Change Position
+          monster.pos.y = "30%";
           entitiesList.push(monster);
         } else if (index == 2) {
-          monster.pos.x = 100; // Change Position
-          monster.pos.y = 70;
+          monster.pos.x = "10%"; // Change Position
+          monster.pos.y = "50%";
           entitiesList.push(monster);
         } else if (index == 3) {
-          monster.pos.x = 100; // Change Position
-          monster.pos.y = 135;
+          monster.pos.x = "10%"; // Change Position
+          monster.pos.y = "70%";
           entitiesList.push(monster);
         }
       });
 
       // display player's item
       pocket.forEach((item, index) => {
+        item.size.width = SIZE
+        item.size.height = SIZE
         if (index == 0) {
-          item.pos.x = 400; // Change Position
-          item.pos.y = 0;
+          item.pos.x = "80%"; // Change Position
+          item.pos.y = "10%";
           entitiesList.push(item);
         } else if (index == 1) {
-          item.pos.x = 500; // Change Position
-          item.pos.y = 0;
+          item.pos.x = "80%"; // Change Position
+          item.pos.y = "30%";
           entitiesList.push(item);
         } else if (index == 2) {
-          item.pos.x = 600; // Change Position
-          item.pos.y = 0;
+          item.pos.x = "80%"; // Change Position
+          item.pos.y = "50%";
           entitiesList.push(item);
         } else if (index == 3) {
-          item.pos.x = 700; // Change Position
-          item.pos.y = 0;
+          item.pos.x = "80%"; // Change Position
+          item.pos.y = "70%";
           entitiesList.push(item);
         }
       });
@@ -243,8 +257,8 @@ export default function (entities, args) {
       entitiesList.push(
         Entity.Button(
           engine,
-          { x: 100, y: 200 },
-          { width: 100, height: 30 },
+          { x: "43%", y: "73%" },
+          { width: 120, height: 60 },
           null,
           "Confirm"
         )
@@ -273,7 +287,6 @@ export default function (entities, args) {
           inTeamAt = -1;
           state1 = null; // re-render
         } else {
-          if (selected.item === "HP_POTION") {
             let callback = buyingItem(
               money,
               price.potion,
@@ -282,7 +295,6 @@ export default function (entities, args) {
             );
             money = callback.money;
             entitiesList = callback.entity;
-          }
         }
       } else if (selected.type === "Monster") {
         let inTeamAt = -1; // checking statement
