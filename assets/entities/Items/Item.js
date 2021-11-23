@@ -25,6 +25,10 @@ const _Item = (props) => {
         selectedColor = "yellow"
     }else selectedColor = "black"
 
+    React.useEffect(()=>{
+        animation.current.play()
+    }, [])
+
     const imageLoader = Items(props.status.item, animation)
 
     return(
