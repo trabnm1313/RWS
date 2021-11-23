@@ -3,7 +3,7 @@ import { Data } from "./opendatabase";
 
 //Sample of how to get data from transaction to use
 
-export default async () => {
+export default () => {
   // Random number in range (min, max) -> getRndInteger(0, 10) = random number between 0 -> 10
   function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -19,7 +19,7 @@ export default async () => {
   let total = 0;
 
   // Get first word from random makeChar
-  let query = Data.rows._array.filter(
+  let query = Data.filter(
     (element) => element.word[0] == makeChar()
   );
   // Random Word from previous query
@@ -34,7 +34,7 @@ export default async () => {
   // Get other word and push it in array until array have 18 letter
   // The array gonna looks like this => array = [ "first_word (from lines 61 -> 71)", "second (in-process below)", "third (in-process below)"]
   while (total < 18) {
-    query = Data.rows._array.filter((element) => element.word[0] == makeChar());
+    query = Data.filter((element) => element.word[0] == makeChar());
 
     if (query.length === 0) {
       continue;
