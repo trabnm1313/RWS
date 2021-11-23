@@ -21,7 +21,6 @@ export default function(entities, args){
     if(events.length > 0 && events[0].status != undefined){
         if(events["0"].status.button == "Confirm"){
             Constants.stage = "Battle"
-            console.log(Constants.stage)
         }
     }
 
