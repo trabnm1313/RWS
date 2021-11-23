@@ -90,15 +90,17 @@ const entitiesGenerator = (engine, words) => {
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object
         let randomCharacter = Math.floor(Math.random() * MonsterList.length)
-        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), MonsterList[randomCharacter]) //Assign key and entity to object
-        entities["Monster:"+i+''+j] = newEntity
-        Constants.team.push(newEntity)
+        newEntity = Entity.Monster(engine, {x: Constants.MAX_WIDTH*0.01+(SIZE), y: Constants.MAX_HEIGHT*0.02+(SIZE)}, {width: SIZE, height: SIZE}, null, MonsterList[randomCharacter]) //Assign key and entity to object
+        entities["Monster:0"] = newEntity
+        Constants.team.push(_.cloneDeep(newEntity))
     }
     else{
         for(let i = 1; i <= Constants.team.length; i++){
             if(i%2 == 1) row++
             Constants.team[i-1].pos.x = Constants.MAX_WIDTH*0.01+(SIZE*(i%2+1))
             Constants.team[i-1].pos.y = Constants.MAX_HEIGHT*0.02+(SIZE*(row-1))
+            Constants.team[i-1].size.width = SIZE
+            Constants.team[i-1].size.height = SIZE
             entities[Constants.team[i-1].status.id] = _.cloneDeep(Constants.team[i-1])
         }
     }

@@ -15,7 +15,7 @@ const _Human = (props) => {
     const isAlive = props.status.isAlive
 
     const response = {
-        name: "SOLDIER_CLICKED",
+        name: "HUMAN_CLICKED",
         id: props.status.id,
         status: props.status,
     }

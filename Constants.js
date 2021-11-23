@@ -3,7 +3,7 @@ import React from "react"
 
 let stage = "Menu"
 let Level = 1
-let money = 1000
+let money = 100000
 let team = []
 let item = []
 

@@ -130,11 +130,11 @@ export default function (entities, args){
         if(initialGenerate && words.length > 1){
             entitiesList = []
             initialGenerate = false
+            time = 1
             timer = setInterval(() => {
                 timerText = entitiesList.filter(entity => { return entity.status.type == "Timer"})[0]
                 if(timerText != undefined) timerText.status.text = time
                 time += 1
-                console.log(time)
             }, 1000)
             generateWord()
             return entitiesGenerator(engine, words, Constants.Level)
@@ -174,7 +174,6 @@ export default function (entities, args){
 
                     //DEBUG
                     console.log(monsterSelected.status.id + " Attack " + humanSelected.status.id)
-                    console.log(monsterSelected.status.Attack)
                     console.log(humanSelected.id + " have " + humanSelected.status.Health + " HP left and isAlive:" + humanSelected.status.isAlive)
                     
 
@@ -354,7 +353,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 10
+                allMonster[randomPosition].status.Health -= 1
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false

@@ -36,7 +36,6 @@ const _Monster = (props) => {
 
     //Loop Animation
     React.useEffect(() => {
-        console.log("enter")
         animation.current.reset()
         animation.current.play()
     }, [isAlive])

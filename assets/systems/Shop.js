@@ -9,6 +9,7 @@ let engine = null;
 let state1 = null; // render state checker
 let state2 = null; // render state checker
 
+let entitiesList
 let monsterList = []; // player's team
 let pocket = []; // player's item
 let money = 0; // player's money
@@ -104,7 +105,11 @@ function buyingItem(money, cost, status, entityList) {
         )
       ); // FIND A WAY TO SEND STATUS
     }
-
+    
+    entityList = entityList.filter((entity) => {
+      if(monsterList.indexOf(entity) >= 0) return false
+      return true
+    });
     state1 = null;
     return { money: money - cost, entity: entityList };
   }
@@ -122,13 +127,15 @@ function randomItem() {
 export default function (entities, args) {
   const events = args.events;
 
-  let entitiesList = Object.values(entities);
+  entitiesList = Object.values(entities);
   if (engine == null) engine = entitiesList[0].engine;
 
   if (Constants.stage == "Shop") {
     // make it render just once time you want it run
     if (state1 === null) {
       // from player
+      let SIZE = Constants.MAX_WIDTH*0.073891
+
       if (state2 === null) {
         monsterList = _.cloneDeep(Constants.team); // player's team
         pocket = _.cloneDeep(Constants.item); // player's item
@@ -149,6 +156,9 @@ export default function (entities, args) {
         let counter = 0; // position in itemInshop array
         let xCounter = 230; // starter x
         let yCounter = 10; // starter y
+
+        //Background Image
+        entitiesList.push(Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle"))
 
         // loop row (for display item in shop)
         for (let i = 0; i < 3; i++) {
@@ -187,6 +197,8 @@ export default function (entities, args) {
 
       // display player's team
       monsterList.forEach((monster, index) => {
+        monster.size.width = SIZE
+        monster.size.height = SIZE
         if (index == 0) {
           monster.pos.x = 100; // Change Position
           monster.pos.y = 0;
@@ -285,7 +297,9 @@ export default function (entities, args) {
           monsterList.splice(inTeamAt, 1);
           money += 0.7 * price.monster; // selling monster give ur moneyback 70%
           entitiesList = entitiesList.filter((entity) => {
-            return entity.status.id != selected.id;
+            if(monsterList.indexOf(entity) >= 0) return false
+            if(entity.status.id == selected.id) return false
+            return true
           });
           inTeamAt = -1;
           state1 = null; // re-render
@@ -300,14 +314,15 @@ export default function (entities, args) {
           entitiesList = callback.entity;
         }
       } else if (selected.type == "Button" && selected.button == "Confirm") {
-        Constants.stage = "Battle";
-        Constants.team = _.cloneDeep(monsterList);
-        Constants.item = _.cloneDeep(pocket);
-        state1 = null;
-        state2 = null;
-        return {};
+        Constants.stage = "Battle"
+        Constants.money = money
+        Constants.team = _.cloneDeep(monsterList)
+        Constants.item = _.cloneDeep(pocket)
+        state1 = null
+        state2 = null
+        return {}
       }
-      console.log(money);
+      console.log("Money left: " + money);
     }
   }
 

@@ -32,17 +32,25 @@ async function openDatabase(){
 
   //If SQLite(default database directory) isn't exists then create one
   if ( !directoryInfo.exists ){
+    console.log("Loading database, Please wait for 10 seconds and restart the app")
     await FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + "SQLite").then(()=>console.log("Created SQLite directory.")).catch(err=>console.log(err))
 
+    const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
+    FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionary.db").then(() => {
+      console.log("Database loaded.")
+      setTimeout(()=>{ parseData() }, 10000) 
+    }).catch(()=>console.log(err))
+
+  }else{
     if(!databaseInfo.exists){
       const [{ uri }] = await Asset.loadAsync(require("../dictionary.db")) //GET local database file URI
       FileSystem.downloadAsync(uri, FileSystem.documentDirectory + "SQLite/dictionary.db").then(() => {
         console.log("Database loaded.")
-        setTimeout(()=>{ parseData() }, 5000) 
+        setTimeout(()=>{ parseData() }, 10000) 
       }).catch(()=>console.log(err))
+    }else{
+      setTimeout(()=>{ parseData() }, 5000)
     }
-  }else{
-    setTimeout(()=>{ parseData() }, 5000) 
   }
 }
 
