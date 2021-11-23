@@ -14,6 +14,8 @@ import { Data, loadStatus } from '../systems/opendatabase'
 import _ from 'lodash'
 import entities from '../entities/index'
 
+let x = true
+
 let initialGenerate = true
 let engine = null
 
@@ -109,15 +111,20 @@ export default function (entities, args){
     if(engine == null && loadStatus != true) engine = entitiesList[0].engine
 
     //Pre-Generate Words
-    if(words.length == 0){
-        words.push("YES")
-        generateWord()
-    }
+    // if(words.length == 0){
+    //     words.push("YES")
+    //     generateWord()
+    // }
 
     //-----------------------------------------------------------------------------
     if(Constants.stage != "Battle") return entities
     
     if(loadStatus){
+
+        if (x) {
+            x = false
+            generateWord()
+        }
 
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
