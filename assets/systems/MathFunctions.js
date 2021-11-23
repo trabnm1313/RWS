@@ -1,21 +1,18 @@
+import _ from 'lodash'
+import entities from '../entities';
+
 let initialStat; // backup data
-let nowStat;
 
 function DamageCalculator(attackerATK, TargetDEF) {
   return attackerATK - attackerATK * (TargetDEF / 100);
 }
 
 function getNowStat(BaseStat, Level) {
-  let result = {
-    HP: BaseStat.HP * Level,
-    ATK: BaseStat.ATK * Level,
-    DEF: BaseStat.DEF * Level,
-  };
+  BaseStat.Health *= Level
+  BaseStat.Attack *= Level
+  BaseStat.Defense *= Level
 
-  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
-  nowStat = JSON.parse(JSON.stringify(entitiesList));
-
-  return result;
+  return BaseStat
 }
 
 function MoneyDrops(wordLength, MoneyLevel = 1) {
@@ -82,8 +79,6 @@ function ATKBoost(wordLength, BaseATK) {
 }
 
 function getBonusATK(entitiesList, wordLength) {
-  // นำแสดงวิธีการนี้โดยพี่จ๊อบแจ๊บ โครตจ๊าบ
-  nowStat = JSON.parse(JSON.stringify(entitiesList));
 
   entitiesList.forEach((monster) => {
     if (monster.status.type == "Monster") {
@@ -96,8 +91,9 @@ function getBonusATK(entitiesList, wordLength) {
   return entitiesList;
 }
 
-function clearBooster() {
-  return nowStat;
+export {
+  getNowStat,
+  getBonusATK,
 }
 
 // Example

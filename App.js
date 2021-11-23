@@ -1,73 +1,52 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useRef, useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-} from "react-native";
-// import * as ScreenOrientation from "expo-screen-orientation";
-// import WordTable from "./assets/entities/WordTable";
-// import opendatabase from "./systems/opendatabase";
-// import genWord from "./systems/genWord";
-// import WordInput from "./assets/entities/WordInput";
-// import findWord from "./systems/findWord";
-import Time from "./assets/entities/Time";
+import { StatusBar } from 'expo-status-bar'
+import React, { useEffect, useRef } from 'react'
+import { StyleSheet, Text, View , TouchableOpacity, LogBox, Platform, Dimensions, Image } from 'react-native'
+import LottieView from 'lottie-react-native'
+import { GameEngine } from 'react-native-game-engine'
+import * as ScreenOrientation from "expo-screen-orientation"
+
+// import Constants  from './Constants'
+
+//Entities
+import loadingScreen from './assets/loadingScreen'
+// import {generator} from './assets/generator'
+
+//Systems
+import GameLoop from './assets/systems/GameLoop'
+import Menu from './assets/systems/Menu'
+import eventHandler from './assets/systems/eventHandler'
+import { openDatabase, loadStatus } from './assets/systems/opendatabase'
+import Shop from './assets/systems/Shop'
+import Constants from './Constants'
+
+//Debugging
+LogBox.ignoreLogs(['Remote debugger']);
 
 export default function App() {
-  // const [wordArray, setWordArray] = useState([]);
-  // const [inputArray, setInputArray] = useState([])
+  // const [stage, setStage] = React.useState("Battle")
+  const engine = useRef(null)
+  openDatabase()
 
-  // Mounting database
-  // useEffect(() => {
-  //   opendatabase()
-  //   changeScreenOrientation()
-  // })
-
-  // screen orient
-  // async function changeScreenOrientation() {
-  //   await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-  // }
-
-  // Call genword
-  // async function generate() {
-  //   setWordArray(await genWord())
-  // }
-
-  // add word from word table to word input
-  function addWordInput(word) {
-    let x = [...inputArray];
-    x.push(word);
-    setInputArray(x);
-  }
-
-  // clear wordInput array
-  function clearWordInput(wantToclear) {
-    if (wantToclear) {
-      setInputArray([]);
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE).then(() => {
+    if(Constants.MAX_HEIGHT > Constants.MAX_WIDTH){
+      let temp = Constants.MAX_HEIGHT
+      Constants.MAX_HEIGHT = Constants.MAX_WIDTH
+      Constants.MAX_WIDTH = temp
     }
-  }
-
-  // handle Checking word in database
-  // gonna upgrade to onchange but now its on click
-  async function handleChange(txt) {
-    // txt is array of word => ["R", "W", "S"] gonna make it to normal string with join() function
-    let gonnaCheck = txt.join("");
-
-    // let check the word now
-    let isWord = await findWord(gonnaCheck);
-    if (isWord == 0) {
-      console.log("No word in database");
-    } else console.log(gonnaCheck + " is a word.");
-  }
+  })
 
   return (
     <View style={styles.container}>
-      <Time />
+      <GameEngine
+      ref={engine}
+      style={{ position: "absolute", top:0, bottom:0, left:0, right:0 }}
+      entities={loadingScreen(engine)}
+      systems={[GameLoop, Menu, Shop]}
+      onEvent={eventHandler}>
+      </GameEngine>
+      <StatusBar style="auto" hidden/>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

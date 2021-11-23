@@ -29,8 +29,8 @@
       "favicon": "./assets/expo/favicon.png"
     },
     "packagerOpts":{
-      "assetExts": ["db"],
-      "sourceExts": ["db"]
+      "assetExts" : ["db"],
+      "sourceExts" : ["db"]
     }
   }
 }

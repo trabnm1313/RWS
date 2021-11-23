@@ -1,29 +1,26 @@
-import Soldier from "./Soldier"
-import Constants from "../../Constants"
+//Human
+import { Human } from "./Humans/Human"
 
-function generatedEnemies(engine){
-    
-    let enemiesList = []
-    for(let i=0; i<6; i++){
-        let pos = Math.floor(Math.random()*4)+1
-        enemiesList.push(Soldier(engine, {x: Constants.MAX_WIDTH/pos, y: Constants.MAX_HEIGHT/pos}, {width: 100, height:100}))
-    }
+//
+import { Monster } from "./Monsters/Monster"
 
+//Alphabet
+import { Alphabet } from "./Words/Alphabet"
 
-    return { ...enemiesList }
-}
+//Items
+import { Item }from "./Items/Item"
 
-export default (engine, gameStage) => {
-    let entities
+//Components
+import { Button } from "./Components/Button"
+import { Background } from "./Components/Background"
+import { Label } from "./Components/Text"
 
-    if(gameStage == "MENU"){
-        entities = {
-            Soldier: Soldier(engine, {x: Constants.MAX_WIDTH/2, y: Constants.MAX_HEIGHT/2}, {width: 100, height:100}) 
-        }
-    }else if(gameStage == "onField"){
-        entities = generatedEnemies(engine)
-    }
-    
-
-    return entities
+export default {
+    Human,
+    Monster,
+    Alphabet,
+    Item,
+    Button,
+    Background,
+    Label
 }
