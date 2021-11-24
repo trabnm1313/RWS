@@ -29,7 +29,7 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
-let time = ALPHABET_TIME, timer = null, timerText = null
+let time = ALPHABET_TIME, timer = setInterval(countdown, 1000), timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
 
@@ -37,6 +37,11 @@ let SIZE, SIZE_BUTTON, SIZE_ITEM
 
 function generateWord(){
     words = genWord()
+}
+
+function countdown() {
+    time -= 1
+    if(timerText != undefined) timerText.status.text = time
 }
 
 function wordEntityGenerator(entitiesList){
@@ -139,10 +144,6 @@ export default function (entities, args){
             SIZE_BUTTON = Constants.MAX_WIDTH*0.067
             time = ALPHABET_TIME
             initialGenerate = false
-            timer = setInterval(() => {
-                if(timerText != undefined) timerText.status.text = time
-                time -= 1
-            }, 1000)
             generateWord()
             let returnEntities = entitiesGenerator(engine, words, Constants.Level)
             timerText = returnEntities.Timer
@@ -212,7 +213,6 @@ export default function (entities, args){
                         Constants.stage = "Shop"
                         initialGenerate = true
                         time = ALPHABET_TIME
-                        clearInterval(timer)
                         return {}
 
                     }
@@ -369,7 +369,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 1
+                allMonster[randomPosition].status.Health -= 5
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
@@ -385,11 +385,11 @@ export default function (entities, args){
                     
                     //Constants.stage = <whatever> here
                     changePhases("alphabet")
+                    console.log("Game Over")
                     entitiesList = []
                     Constants.stage = "Menu"
                     initialGenerate = true
                     time = ALPHABET_TIME
-                    clearInterval(timer)
                     return {}
 
                 }

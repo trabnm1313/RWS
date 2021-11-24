@@ -25,6 +25,7 @@ export default function(entities, args){
     if(events.length > 0 && events[0].status != undefined){
         if(events["0"].status.button == "Start"){
             Constants.stage = "Battle"
+            initial = true
         }
     }
 

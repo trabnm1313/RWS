@@ -94,6 +94,22 @@ const allItem = [
     type: "Item",
     value: "Dynamite",
   },
+  {
+    type: "Item",
+    value: "HP_POTION",
+  },
+  {
+    type: "Item",
+    value: "Attack_POTION",
+  },
+  {
+    type: "Item",
+    value: "Defense_POTION",
+  },
+  {
+    type: "Item",
+    value: "Dynamite",
+  },
 ];
 
 const price = {
