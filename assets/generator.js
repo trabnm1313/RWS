@@ -91,8 +91,11 @@ const entitiesGenerator = (engine, words) => {
     //Background Image
     entities["Background"] = Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle")
 
-    //Timer
-    entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "NaN")
+    //Text
+    entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "Timer: -")
+    
+    //Status Text
+    entities["Label_HP"] = Entity.Label({x: "80%", y:"80%"}, {width: 80, height: 30}, null, "Label_HP", "HP: -")
 
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object

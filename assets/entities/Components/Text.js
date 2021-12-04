@@ -13,7 +13,7 @@ const _Label = (props) => {
 
     return(
         <View style={{position: 'absolute', width: bodyWidth, height: bodyHeight, left: xBody, top: yBody}}>
-            <Text style={{fontSize: 16, fontWeight: 'bold', color: "white"}}>Time: {text}</Text>
+            <Text style={{fontSize: 16, fontWeight: 'bold', color: "white"}}>{text}</Text>
         </View>
     )
 }

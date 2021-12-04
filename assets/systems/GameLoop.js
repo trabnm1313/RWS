@@ -19,7 +19,7 @@ let initialGenerate = true
 let engine = null
 
 //Configuration
-const ALPHABET_TIME = 30 + 1
+const ALPHABET_TIME = 0 + 1
 
 //Selected Entity
 let humanSelected = "", monsterSelected = ""
@@ -29,6 +29,8 @@ let didWordChange = false
 let phase = "alphabet"
 
 //Common Variables
+let delay = 0, startTime = 0
+let Label_HP
 let time = ALPHABET_TIME, timer = setInterval(countdown, 1000), timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
@@ -41,7 +43,16 @@ function generateWord(){
 
 function countdown() {
     time -= 1
-    if(timerText != undefined) timerText.status.text = time
+    if(timerText != undefined) timerText.status.text = "Timer: " + time
+}
+
+function updateSelectStatus(){
+    if(monsterSelected == "") Label_HP.status.text = "HP: -"
+    else Label_HP.status.text = "HP: " + monsterSelected.status.Health
+}
+
+function attackNotify(human, monster, index){
+    entitiesList.push(Entity.Label({x: "45%", y: (10+(5*index))+"%"}, {width: 400, height: 30}, null, "Notify", "Human: " + human.status.id + " attack " + monster.status.id))
 }
 
 function wordEntityGenerator(entitiesList){
@@ -146,10 +157,23 @@ export default function (entities, args){
             initialGenerate = false
             generateWord()
             let returnEntities = entitiesGenerator(engine, words, Constants.Level)
+            Label_HP = returnEntities.Label_HP
             timerText = returnEntities.Timer
             return returnEntities
         }else if(initialGenerate){
             return {}
+        }
+
+        //Check for delay event
+        if(delay != 0){
+            if((Math.abs(time) - Math.abs(startTime)) >= delay){
+                //Clear delay 
+                delay = 0
+                startTime = 0
+
+                //Todo
+                return entitiesList.filter(entity => { return entity.status.type != "Notify" })
+            }
         }
 
 
@@ -163,10 +187,12 @@ export default function (entities, args){
                 if(events["0"].status.type == "Monster" && monsterSelected == "" && events["0"].status.rested != true && events["0"].status.isAlive){ //Select monster first
                     monsterSelected = events[0]
                     monsterSelected.status.selected = true
+                    updateSelectStatus()
                 }else if(events["0"].id == monsterSelected.id){ //Select same monster, remove the selected on both side
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
+                    updateSelectStatus()
                 }else if(events["0"].status.type == "Monster" && monsterSelected != "" && events["0"].status.rested != true && events["0"].status.isAlive){ //Selecte different monster while there is selected
                     monsterSelected.status.selected = false
                     if(humanSelected != ""){
@@ -175,6 +201,7 @@ export default function (entities, args){
                     }
                     monsterSelected = events[0]
                     monsterSelected.status.selected = true
+                    updateSelectStatus()
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
                     humanSelected.status.Health -= 200
@@ -195,6 +222,7 @@ export default function (entities, args){
                     monsterSelected.status.selected = false
                     monsterSelected = ""
                     humanSelected = ""
+                    updateSelectStatus()
 
                     //if all human died, victory
                     let humanLeft = entitiesList.filter(entity => { return entity.status.type == "Human" && entity.status.isAlive == true})
@@ -394,9 +422,14 @@ export default function (entities, args){
 
                 }
 
+                attackNotify(humanAttackQueue[i], allMonster[randomPosition], i+1)
                 console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)
                 console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive + " isRested: " + allMonster[randomPosition].status.rested)
             }
+
+            //Start delay return
+            startTime = time
+            delay = 3
 
             changePhases("monster")
 
