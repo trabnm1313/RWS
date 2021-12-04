@@ -12,6 +12,8 @@ import { Item }from "./Items/Item"
 
 //Components
 import { Button } from "./Components/Button"
+import { Coin } from "./Components/Coin"
+import { Heart } from "./Components/Heart"
 import { Background } from "./Components/Background"
 import { Label } from "./Components/Text"
 
@@ -22,6 +24,8 @@ export default {
     Item,
     Button,
     Background,
-    Label
+    Label,
+    Coin,
+    Heart,
 }
 

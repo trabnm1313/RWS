@@ -19,7 +19,7 @@ let initialGenerate = true
 let engine = null
 
 //Configuration
-const ALPHABET_TIME = 30 + 1
+const ALPHABET_TIME = 3 + 1
 
 //Selected Entity
 let humanSelected = "", monsterSelected = ""
@@ -152,9 +152,8 @@ export default function (entities, args){
             return {}
         }
 
-
         //If there is more than 0 events occurs (object being touch and dispatch events, etc)
-        if(events.length > 0 && events[0].status != undefined){      
+        if(events.length > 0 && events[0].status != undefined) {
 
             //Selecting Phase
             if(phase == "monster"){
@@ -263,7 +262,6 @@ export default function (entities, args){
 
             //Alphabet phase
             }else if(phase == "alphabet"){
-
                 //Select alphabet
                 //If click at input alphabet and the display alphabet
                 if(events[0].name == "ALPHABET_CLICKED" && currentWord.length < 7 && !currentWordID.includes(events[0].id)){
@@ -369,7 +367,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 5
+                allMonster[randomPosition].status.Health -= 100
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
@@ -382,16 +380,29 @@ export default function (entities, args){
                     // changePhases("alphabet")
                     // return entitiesGenerator(engine, words)
                     //-----------------------------------------
-                    
-                    //Constants.stage = <whatever> here
-                    changePhases("alphabet")
-                    console.log("Game Over")
-                    entitiesList = []
-                    Constants.stage = "Menu"
-                    initialGenerate = true
-                    time = ALPHABET_TIME
-                    return {}
 
+                    if (Constants.heart <= 0) {
+                        console.log("Game Over")
+                        changePhases("alphabet")
+                        Constants.heart = 2
+                        Constants.money = 1000
+                        Constants.stage = "Menu"
+                        entitiesList = []
+                        time = ALPHABET_TIME
+                        initialGenerate = true
+                        time = ALPHABET_TIME
+                        return {}
+
+                    } else {
+                        Constants.heart -= 1
+                        console.log("Heart = " + Constants.heart)
+                        changePhases("alphabet")
+                        entitiesList = []
+                        Constants.stage = "Shop"
+                        initialGenerate = true
+                        time = ALPHABET_TIME
+                        return {}
+                    }
                 }
 
                 console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)

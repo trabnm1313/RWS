@@ -90,9 +90,16 @@ const entitiesGenerator = (engine, words) => {
 
     //Background Image
     entities["Background"] = Entity.Background({x: 0, y:0}, {width: "100%", height: "100%"}, null, "Battle")
-
+    
     //Timer
     entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "NaN")
+
+    //Coin
+    entities["Coin"] = Entity.Coin({x: 600, y: 300}, {width: 40, height: 40}, null, "Coin", Constants.money)
+
+    //Heart
+    entities["Heart"] = Entity.Heart({x: 600, y: 250}, {width: 40, height: 40}, null, "Heart", Constants.heart)
+
 
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object
@@ -138,6 +145,8 @@ const entitiesGenerator = (engine, words) => {
             entities["Alphabet:" + i + j] = Entity.Alphabet(engine, {x: Constants.MAX_WIDTH*0.28+(j*SIZE_BUTTON), y: Constants.MAX_HEIGHT*0.54+(i*SIZE_BUTTON)}, {width: SIZE_BUTTON, height: SIZE_BUTTON}, null, words[(i*6)+j])  //Assign key and entity to object
         }
     }
+
+
     
     return entities
 }
