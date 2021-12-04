@@ -95,7 +95,10 @@ const entitiesGenerator = (engine, words) => {
     entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "Timer: -")
     
     //Status Text
-    entities["Label_HP"] = Entity.Label({x: "80%", y:"80%"}, {width: 80, height: 30}, null, "Label_HP", "HP: -")
+    for(let i = 1; i <= 3; i++){
+        entities["Label_HP"] = Entity.Label({x: "1.5%", y:95+(i*25)}, {width: 80, height: 30}, null, "Label_HP", "HP: -")
+    }
+    
 
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object

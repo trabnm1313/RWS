@@ -52,7 +52,7 @@ function updateSelectStatus(){
 }
 
 function attackNotify(human, monster, index){
-    entitiesList.push(Entity.Label({x: "45%", y: (10+(5*index))+"%"}, {width: 400, height: 30}, null, "Notify", "Human: " + human.status.id + " attack " + monster.status.id))
+    entitiesList.push(Entity.Label({x: "33%", y: (10+(5*index))+"%"}, {width: 400, height: 30}, null, "Notify", "Human: " + human.status.id + " attack " + monster.status.id))
 }
 
 function wordEntityGenerator(entitiesList){
