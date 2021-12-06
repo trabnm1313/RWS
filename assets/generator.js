@@ -95,12 +95,13 @@ const entitiesGenerator = (engine, words) => {
     entities["Timer"] = Entity.Label({x: "45%", y:"5%"}, {width: 80, height: 30}, null, "Timer", "Timer: -")
     
     //Status Text
-    for(let i = 1; i <= 3; i++){
+    /*for(let i = 1; i <= 3; i++){
         let statusLabel = ["Label_HP", "Label_ATK", "Label_DEF"]
         let displayText = ["HP: -", "ATK: -", "DEF: -"]
         entities["Label:" + i] = Entity.Label({x: "1.5%", y:95+(i*25)}, {width: 80, height: 30}, null, statusLabel[i-1], displayText[i-1])
-    }
+    }*/
     
+   
 
     if(Constants.team.length == 0){
         let newEntity = {} //Create empty object
@@ -126,8 +127,18 @@ const entitiesGenerator = (engine, words) => {
         for(let j=0; j<2; j++) {
             let newEntity = {} //Create empty object
             let randomCharacter = Math.floor(Math.random() * CharacterList.length)
-            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.75+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*SIZE)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
+            newEntity = Entity.Human(engine, {x: Constants.MAX_WIDTH*0.75+(j*SIZE), y: Constants.MAX_HEIGHT*0.02+(i*(SIZE+25)+10)}, {width: SIZE, height: SIZE}, MathFunction.getNowStat(_.cloneDeep(BaseStats), Constants.Level), CharacterList[randomCharacter]) //Assign key and entity to object
             entities["Human:"+i+''+j] = newEntity
+        }
+    }
+
+     //Status Text Human
+     for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 2; j++) {
+            let statusLabel = ["Label_HP", "Label_ATK", "Label_DEF"]
+            let displayText = ["HP: -"]
+            entities["Label:"+i+''+j] = Entity.Label({x: Constants.MAX_WIDTH*0.74+(j*(SIZE+10)), y:Constants.MAX_HEIGHT*(-0.01)+(i*(SIZE+25))}, {width: 80, height: 30}, null, 'Test', 'HP: 100')
+            console.log(Constants.MAX_HEIGHT*(-0.01)+(i*(SIZE+25)))
         }
     }
 
