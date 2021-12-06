@@ -96,7 +96,9 @@ const entitiesGenerator = (engine, words) => {
     
     //Status Text
     for(let i = 1; i <= 3; i++){
-        entities["Label_HP"] = Entity.Label({x: "1.5%", y:95+(i*25)}, {width: 80, height: 30}, null, "Label_HP", "HP: -")
+        let statusLabel = ["Label_HP", "Label_ATK", "Label_DEF"]
+        let displayText = ["HP: -", "ATK: -", "DEF: -"]
+        entities["Label:" + i] = Entity.Label({x: "1.5%", y:95+(i*25)}, {width: 80, height: 30}, null, statusLabel[i-1], displayText[i-1])
     }
     
 

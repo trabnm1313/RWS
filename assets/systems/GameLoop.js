@@ -12,6 +12,7 @@ import findWord from './findWord'
 import { Data, loadStatus } from '../systems/opendatabase'
 
 import _ from 'lodash'
+import { Label } from '../entities/Components/Text'
 
 let x = true
 
@@ -30,7 +31,7 @@ let phase = "alphabet"
 
 //Common Variables
 let delay = 0, startTime = 0
-let Label_HP
+let Label_HP, Label_ATK, Label_DEF
 let time = ALPHABET_TIME, timer = setInterval(countdown, 1000), timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
@@ -47,8 +48,15 @@ function countdown() {
 }
 
 function updateSelectStatus(){
-    if(monsterSelected == "") Label_HP.status.text = "HP: -"
-    else Label_HP.status.text = "HP: " + monsterSelected.status.Health
+    if(monsterSelected == ""){
+        Label_HP.status.text = "HP: -"
+        Label_ATK.status.text = "ATK: -"
+        Label_DEF.status.text = "DEF: -"
+    }else{
+        Label_HP.status.text = "HP: " + monsterSelected.status.Health
+        Label_ATK.status.text = "ATK: " + monsterSelected.status.Attack
+        Label_DEF.status.text = "DEF: " + monsterSelected.status.Defense
+    }
 }
 
 function attackNotify(human, monster, index){
@@ -157,7 +165,9 @@ export default function (entities, args){
             initialGenerate = false
             generateWord()
             let returnEntities = entitiesGenerator(engine, words, Constants.Level)
-            Label_HP = returnEntities.Label_HP
+            Label_HP = returnEntities["Label:1"]
+            Label_ATK = returnEntities["Label:2"]
+            Label_DEF = returnEntities["Label:3"]
             timerText = returnEntities.Timer
             return returnEntities
         }else if(initialGenerate){
