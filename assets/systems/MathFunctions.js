@@ -19,7 +19,7 @@ function MoneyDrops(wordLength, MoneyLevel = 1) {
   let money = 0;
 
   wordLength.map((wordLength) => {
-    switch (wordLength) {
+    switch (wordLength.length) {
       case 1:
         money += 10 * MoneyLevel;
         break;
@@ -94,6 +94,7 @@ function getBonusATK(entitiesList, wordLength) {
 export {
   getNowStat,
   getBonusATK,
+  MoneyDrops
 }
 
 // Example

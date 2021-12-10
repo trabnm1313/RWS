@@ -20,6 +20,9 @@ let wannaRandom = true; // first time must be true
 let itemFullLenght = 4; // can be change
 let monterFullLenght = 4; // can be change
 
+//Component
+let textLabel, moneyLabel
+
 // Item that gonna random appear in shop (MUST BE CHANGE)
 const allItem = [
   {
@@ -142,15 +145,19 @@ function buyingItem(money, cost, status, entityList) {
 
   if (money < cost) {
     console.log("NOT ENOUGH MONEY");
+    textLabel.status.text = "Not enough money"
     return { money: money, entity: entityList };
   } else if (doHave.includes(true)) {
     console.log("SAME");
+    textLabel.status.text = "SAME"
     return { money: money, entity: entityList };
   } else if (isFull) {
     console.log("POCKET FULL");
+    textLabel.status.text = "Pocket full"
     return { money: money, entity: entityList };
   } else {
     if (status.type == "Item") {
+      textLabel.status.text = "Purchased!"
       entityList = entityList.filter((entity) => {
         return entity.status.id != status.id;
       });
@@ -177,6 +184,9 @@ function buyingItem(money, cost, status, entityList) {
         )
       ); // FIND A WAY TO SEND STATUS
     }
+
+    //Delay text disappear
+    setTimeout(() => { textLabel.status.text = "" }, 3000)
     
     entityList = entityList.filter((entity) => {
       if(monsterList.indexOf(entity) >= 0) return false
@@ -313,7 +323,11 @@ export default function (entities, args) {
         }
       });
 
-      //
+      //Money
+      moneyLabel = Entity.Label({ x: "43%", y: "65%" }, { width: 200, height: 60 }, null, "Money", "Money: " + money)
+      entitiesList.push(moneyLabel)
+
+      //Confirm button
       entitiesList.push(
         Entity.Button(
           engine,
@@ -323,6 +337,10 @@ export default function (entities, args) {
           "Confirm"
         )
       );
+
+      //Not enough money text
+      textLabel = Entity.Label({ x: "43%", y: "90%" }, { width: 120, height: 60 }, null, "NotEnoughMoney", "")
+      entitiesList.push(textLabel)
       //       entitiesList.push(Entity.CostIndicator(engine, {x: 0, y: 0}, {width: 100, height: 30}, null, "Hello"))
     }
 
@@ -354,6 +372,7 @@ export default function (entities, args) {
               entitiesList
             );
             money = callback.money;
+            moneyLabel.status.text = "Money: " + money
             entitiesList = callback.entity;
         }
       } else if (selected.type === "Monster") {
@@ -368,6 +387,7 @@ export default function (entities, args) {
         if (inTeamAt != -1) {
           monsterList.splice(inTeamAt, 1);
           money += 0.7 * price.monster; // selling monster give ur moneyback 70%
+          moneyLabel.status.text = "Money: " + money
           entitiesList = entitiesList.filter((entity) => {
             if(monsterList.indexOf(entity) >= 0) return false
             if(entity.status.id == selected.id) return false
@@ -383,6 +403,7 @@ export default function (entities, args) {
             entitiesList
           );
           money = callback.money;
+          moneyLabel.status.text = "Money: " + money
           entitiesList = callback.entity;
         }
       } else if (selected.type == "Button" && selected.button == "Confirm") {

@@ -5,7 +5,7 @@ import genWord from '../systems/genWord'
 
 //Function
 import { entitiesGenerator } from '../generator'
-import {getBonusATK, clearBooster, getNowStat} from '../systems/MathFunctions'
+import {getBonusATK, MoneyDrops} from '../systems/MathFunctions'
 import findWord from './findWord'
 
 //Variable
@@ -20,7 +20,7 @@ let initialGenerate = true
 let engine = null
 
 //Configuration
-const ALPHABET_TIME = 0 + 1
+const ALPHABET_TIME = 10 + 1
 
 //Selected Entity
 let humanSelected = "", monsterSelected = ""
@@ -31,7 +31,7 @@ let phase = "alphabet"
 
 //Common Variables
 let delay = 0, startTime = 0
-let Label_HP, Label_ATK, Label_DEF
+let Label_HP, Label_ATK, Label_DEF, HumanHP = []
 let time = ALPHABET_TIME, timer = setInterval(countdown, 1000), timerText = null
 let currentWord = "", currentWordID = [], submitWord = []
 let entitiesList, words = [], attackQueue = []
@@ -48,6 +48,7 @@ function countdown() {
 }
 
 function updateSelectStatus(){
+    //Monster Status
     if(monsterSelected == ""){
         Label_HP.status.text = "HP: -"
         Label_ATK.status.text = "ATK: -"
@@ -56,6 +57,11 @@ function updateSelectStatus(){
         Label_HP.status.text = "HP: " + monsterSelected.status.Health
         Label_ATK.status.text = "ATK: " + monsterSelected.status.Attack
         Label_DEF.status.text = "DEF: " + monsterSelected.status.Defense
+    }
+
+    //Human Status
+    for(let i=0; i < HumanHP.length; i++){
+        HumanHP[i].status.text = "HP: " + entitiesList.filter(entity => { return entity.status.id == HumanHP[i].status.type.split("_")[1] })[0].status.Health
     }
 }
 
@@ -152,7 +158,6 @@ export default function (entities, args){
 
         //Generate intitial entity
         if(initialGenerate && words.length > 1){
-            entitiesList = []
             if(Constants.MAX_HEIGHT > Constants.MAX_WIDTH){
                 let temp = Constants.MAX_HEIGHT
                 Constants.MAX_HEIGHT = Constants.MAX_WIDTH
@@ -169,6 +174,9 @@ export default function (entities, args){
             Label_ATK = returnEntities["Label:2"]
             Label_DEF = returnEntities["Label:3"]
             timerText = returnEntities.Timer
+            HumanHP = Object.values(returnEntities).filter(entity => {return entity.status.type.includes("HumanHP_")})
+            entitiesList = Object.values(returnEntities)
+            updateSelectStatus()
             return returnEntities
         }else if(initialGenerate){
             return {}
@@ -214,7 +222,7 @@ export default function (entities, args){
                     updateSelectStatus()
                 }else if(events["0"].status.type == "Human" && monsterSelected != "" && events["0"].status.isAlive == true){ //Select human after monster and human not dead yet
                     humanSelected = events[0]
-                    humanSelected.status.Health -= 200
+                    humanSelected.status.Health -= monsterSelected.status.Attack
 
                     //Change if the attacked human is dead yet
                     if(humanSelected.status.Health <= 0) humanSelected.status.isAlive = false
@@ -272,22 +280,24 @@ export default function (entities, args){
                             if(entity.status.type == "Monster") entity.status.Health += 20
                             return entity
                         })
-                    }else if(events["0"].status.item == "DAMAGE_POTION"){
+                    }else if(events["0"].status.item == "Attack_POTION"){
                         entitiesList = entitiesList.map(entity => {
                             if(entity.status.type == "Monster") entity.status.Attack += (entity.status.Attack * 20 ) / 100
                             return entity
                         })
-                    }else if(events["0"].status.item == "DEFENSE_POTION"){
+                    }else if(events["0"].status.item == "Defense_POTION"){
                         entitiesList = entitiesList.map(entity => {
                             if(entity.status.type == "Monster") entity.status.Defense += (entity.status.Defense * 20 ) / 100
                             return entity
                         })
-                    }else if(events["0"].status.item == "BOMB"){
+                    }else if(events["0"].status.item == "Dynamite"){
                         entitiesList = entitiesList.map(entity => {
                             if(entity.status.type == "Human") entity.status.Health -= (entity.status.Health * 30) / 100 
                             return entity
                         })
                     }
+
+                    updateSelectStatus()
                     
                     //Removed used item from Constants
                     Constants.item = Constants.item.filter(item => { return item.status.id != events["0"].status.id})
@@ -383,11 +393,16 @@ export default function (entities, args){
                 entitiesList = clearDisplayWordEntity(entitiesList)
                 entitiesList = clearWordEntity(entitiesList)
 
+                //Give money for each words success
+                Constants.money += MoneyDrops(submitWord, 1)
+                console.log("Current money: " + Constants.money)
+
                 //Remove timer
                 entitiesList = entitiesList.filter(entity => { return entity.status.type != "Timer" })
     
                 //boost monster ATK for word completed
                 entitiesList = getBonusATK(entitiesList, submitWord)
+                updateSelectStatus()
                 
                 changePhases("monster")
             }
@@ -407,7 +422,7 @@ export default function (entities, args){
                 let allMonster = entitiesList.filter(entity => {return entity.status.type == "Monster" && entity.status.isAlive == true})
                 let randomPosition = Math.floor(Math.random() * allMonster.length)
                 
-                allMonster[randomPosition].status.Health -= 5
+                allMonster[randomPosition].status.Health -= humanAttackQueue[i].status.Attack - Math.floor((humanAttackQueue[i].status.Attack * allMonster[randomPosition].status.Defense) / 100)
 
                 //Check if monster dead yet
                 if(allMonster[randomPosition].status.Health <= 0) allMonster[randomPosition].status.isAlive = false
@@ -425,6 +440,8 @@ export default function (entities, args){
                     changePhases("alphabet")
                     console.log("Game Over")
                     entitiesList = []
+                    Constants.money = 0
+                    Constants.Level = 1
                     Constants.stage = "Menu"
                     initialGenerate = true
                     time = ALPHABET_TIME
@@ -432,6 +449,9 @@ export default function (entities, args){
 
                 }
 
+                if(entitiesList.filter(entity => {return entity.status.type == "Notify"}).length >= entitiesList.filter(entity => {return entity.status.type == "Human" && entity.status.isAlive == true}).length){
+                    entitiesList = entitiesList.filter(entity => { return entity.status.type != "Notify"})
+                }
                 attackNotify(humanAttackQueue[i], allMonster[randomPosition], i+1)
                 console.log(humanAttackQueue[i].status.id + " attack " + allMonster[randomPosition].status.id)
                 console.log("HP: " + allMonster[randomPosition].status.Health +" isAlive: " + allMonster[randomPosition].status.isAlive + " isRested: " + allMonster[randomPosition].status.rested)
